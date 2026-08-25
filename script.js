@@ -661,14 +661,18 @@ function openModal(e) {
 function renderModalDayTabs() {
   document.getElementById('modalDayTabs').innerHTML=
     DAYS.map(d=>`<button class="modal-day-tab ${d===addingTo.day?'active':''}" data-day="${d}">${d.slice(0,3)}</button>`).join('');
-  document.querySelectorAll('.modal-day-tab').forEach(btn=>{
-    btn.addEventListener('click',()=>{
-      addingTo.day=btn.dataset.day;
-      document.querySelectorAll('.modal-day-tab').forEach(b=>b.classList.toggle('active',b.dataset.day===addingTo.day));
-      document.getElementById('modalAddedMsg').classList.add('hidden');
-    });
-  });
 }
+
+// Single persistent event delegation on the tabs container
+document.getElementById('modalDayTabs').addEventListener('click', function(e) {
+  const btn = e.target.closest('.modal-day-tab');
+  if (!btn) return;
+  addingTo.day = btn.dataset.day;
+  document.querySelectorAll('.modal-day-tab').forEach(b =>
+    b.classList.toggle('active', b.dataset.day === addingTo.day)
+  );
+  document.getElementById('modalAddedMsg').classList.add('hidden');
+});
 
 document.getElementById('closeModal').addEventListener('click',()=>{
   document.getElementById('modalOverlay').classList.add('hidden');
