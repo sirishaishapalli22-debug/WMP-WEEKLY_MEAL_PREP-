@@ -32,8 +32,6 @@ body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; backg
 .btn-secondary:hover { background:var(--gray); }
 .btn-nav { background:white; border:1px solid var(--border); width:34px; height:34px; border-radius:8px; cursor:pointer; font-size:16px; flex-shrink:0; }
 .btn-nav:hover { background:var(--gray); }
-.btn-plan-week { background:#f0fdf4; border:1px solid var(--green); color:var(--green-dark); padding:8px 14px; border-radius:8px; cursor:pointer; font-size:13px; font-weight:600; white-space:nowrap; transition:all .2s; }
-.btn-plan-week:hover { background:var(--green); color:white; }
 
 /* PLANNER */
 .planner-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:8px; overflow-x:auto; }
@@ -57,11 +55,28 @@ body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; backg
 .add-food-btn { width:100%; background:var(--gray); border:1px dashed var(--border); border-radius:6px; padding:4px; cursor:pointer; font-size:11px; color:var(--muted); margin-top:4px; transition:all .2s; }
 .add-food-btn:hover { background:var(--green-light); border-color:var(--green); color:var(--green-dark); }
 
-/* NUTRITION */
-.day-selector { display:flex; gap:6px; margin-bottom:20px; overflow-x:auto; padding-bottom:4px; }
-.day-btn { padding:7px 14px; border:1px solid var(--border); border-radius:8px; background:white; cursor:pointer; font-size:13px; white-space:nowrap; transition:all .2s; }
-.day-btn.active { background:var(--green); color:white; border-color:var(--green); }
+/* NUTRITION — WEEK VIEW */
+.week-summary-card { background:white; border:1px solid var(--border); border-radius:var(--radius); padding:20px; margin-bottom:16px; }
+.week-summary-card h3 { font-size:16px; font-weight:700; margin-bottom:16px; }
+.week-macro-row { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+.week-macro-item { background:var(--gray); border-radius:10px; padding:12px 14px; }
+.week-macro-label { display:block; font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.4px; margin-bottom:4px; }
+.week-macro-val { display:block; font-size:20px; font-weight:800; margin-bottom:2px; }
 
+.week-nutrition-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:8px; margin-bottom:20px; }
+.day-nutr-card { background:white; border:2px solid var(--border); border-radius:10px; padding:10px 8px; cursor:pointer; transition:all .2s; text-align:center; }
+.day-nutr-card:hover { border-color:var(--green); transform:translateY(-1px); box-shadow:0 4px 12px rgba(0,0,0,.08); }
+.day-nutr-card.active { border-color:var(--green); background:var(--green-light); box-shadow:0 4px 12px rgba(34,197,94,.2); }
+.day-nutr-card.ok { border-color:#86efac; }
+.day-nutr-card.over { border-color:#fca5a5; }
+.day-nutr-card.low { border-color:#fde68a; }
+.day-nutr-card.empty { opacity:0.7; }
+.day-nutr-name { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; color:var(--muted); }
+.day-nutr-cal { font-size:18px; font-weight:800; margin:5px 0 2px; }
+.day-nutr-macros { font-size:10px; color:var(--muted); line-height:1.4; }
+.day-nutr-status { font-size:14px; margin-top:4px; }
+
+/* NUTRITION — DAY DETAIL */
 .nutrition-card, .meals-summary { background:white; border:1px solid var(--border); border-radius:var(--radius); padding:20px; margin-bottom:14px; }
 .nutrition-card h3, .meals-summary h3 { font-size:15px; font-weight:700; margin-bottom:14px; }
 .progress-item { margin-bottom:16px; }
@@ -77,6 +92,7 @@ body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; backg
 .status-badge.ok { background:var(--green-light); color:var(--green-dark); }
 .status-badge.high { background:#fee2e2; color:#dc2626; }
 .status-badge.low { background:#fef9c3; color:#a16207; }
+.status-badge.empty { background:var(--gray); color:var(--muted); }
 
 .suggestions-card { background:#fffbeb; border:1px solid #fde68a; border-radius:var(--radius); padding:16px 20px; margin-bottom:14px; }
 .suggestions-card.ok { background:var(--green-light); border-color:var(--green); }
@@ -123,12 +139,6 @@ body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; backg
 .target-value { display:block; font-size:22px; font-weight:800; color:var(--green-dark); }
 .target-label { display:block; font-size:11px; color:var(--muted); margin-top:2px; }
 
-/* TEMPLATE CARDS */
-.template-card { background:var(--gray); border:1px solid var(--border); border-radius:10px; padding:14px 16px; margin-bottom:10px; transition:border-color .2s; }
-.template-card:hover { border-color:var(--green); }
-.btn-apply-template { background:var(--green); color:white; border:none; padding:7px 14px; border-radius:7px; cursor:pointer; font-size:13px; font-weight:600; white-space:nowrap; }
-.btn-apply-template:hover { background:var(--green-dark); }
-
 /* MODAL */
 .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,.4); display:flex; align-items:center; justify-content:center; z-index:100; padding:16px; }
 .modal-overlay.hidden { display:none; }
@@ -152,6 +162,10 @@ body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; backg
 .serving-input { width:42px; border:none; background:none; font-size:13px; font-weight:600; text-align:center; outline:none; color:var(--green-dark); }
 .serving-label { font-size:10px; color:var(--muted); }
 
+@media (max-width:900px) {
+  .week-nutrition-grid { grid-template-columns:repeat(4,1fr); }
+  .week-macro-row { grid-template-columns:1fr; }
+}
 @media (max-width:768px) {
   .main { padding:12px; }
   .planner-grid { grid-template-columns:repeat(7,140px); }
@@ -159,4 +173,5 @@ body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; backg
   .header-inner { justify-content:center; }
   .header h1 { text-align:center; }
   .section-header { justify-content:center; }
+  .week-nutrition-grid { grid-template-columns:repeat(4,1fr); }
 }
