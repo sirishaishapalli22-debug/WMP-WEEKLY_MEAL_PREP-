@@ -261,3 +261,10 @@ body {
   .header-inner { justify-content: center; }
   .header h1 { text-align: center; }
 }
+
+.food-add-group { display:flex; align-items:center; gap:6px; flex-shrink:0; }
+.serving-wrap { display:flex; align-items:center; gap:2px; background:var(--gray); border:1px solid var(--border); border-radius:6px; padding:2px 6px; }
+.serving-input { width:42px; border:none; background:none; font-size:13px; font-weight:600; text-align:center; outline:none; color:var(--green-dark); }
+.serving-label { font-size:10px; color:var(--muted); }
+.qty-input { width:32px; border:1px solid var(--border); border-radius:4px; font-size:11px; font-weight:700; text-align:center; outline:none; color:var(--green-dark); background:white; padding:1px; }
+
