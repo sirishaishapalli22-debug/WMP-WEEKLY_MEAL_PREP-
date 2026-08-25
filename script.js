@@ -648,15 +648,38 @@ document.getElementById('nextWeek').addEventListener('click',()=>{ currentWeekSt
 
 // ── FOOD MODAL ─────────────────────────────────────────
 function openModal(e) {
-  addingTo={day:e.target.dataset.day,meal:e.target.dataset.meal};
-  document.getElementById('modalTitle').textContent=`Add to ${addingTo.day} — ${addingTo.meal}`;
+  addingTo={day:e.target.dataset.day, meal:e.target.dataset.meal};
+  document.getElementById('modalTitle').textContent=`${EMOJI[addingTo.meal]} ${addingTo.meal}`;
   document.getElementById('foodSearch').value='';
+  document.getElementById('modalAddedMsg').classList.add('hidden');
+  renderModalDayTabs();
   renderFoodList('');
   document.getElementById('modalOverlay').classList.remove('hidden');
   setTimeout(()=>document.getElementById('foodSearch').focus(),100);
 }
-document.getElementById('closeModal').addEventListener('click',()=>document.getElementById('modalOverlay').classList.add('hidden'));
-document.getElementById('modalOverlay').addEventListener('click',e=>{ if(e.target.id==='modalOverlay') document.getElementById('modalOverlay').classList.add('hidden'); });
+
+function renderModalDayTabs() {
+  document.getElementById('modalDayTabs').innerHTML=
+    DAYS.map(d=>`<button class="modal-day-tab ${d===addingTo.day?'active':''}" data-day="${d}">${d.slice(0,3)}</button>`).join('');
+  document.querySelectorAll('.modal-day-tab').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      addingTo.day=btn.dataset.day;
+      document.querySelectorAll('.modal-day-tab').forEach(b=>b.classList.toggle('active',b.dataset.day===addingTo.day));
+      document.getElementById('modalAddedMsg').classList.add('hidden');
+    });
+  });
+}
+
+document.getElementById('closeModal').addEventListener('click',()=>{
+  document.getElementById('modalOverlay').classList.add('hidden');
+  renderPlanner();
+});
+document.getElementById('modalOverlay').addEventListener('click',e=>{
+  if(e.target.id==='modalOverlay'){
+    document.getElementById('modalOverlay').classList.add('hidden');
+    renderPlanner();
+  }
+});
 document.getElementById('foodSearch').addEventListener('input',e=>renderFoodList(e.target.value));
 
 function renderFoodList(query) {
@@ -665,7 +688,7 @@ function renderFoodList(query) {
     <div class="food-item">
       <div class="food-item-info">
         <div class="food-item-name">${f.name}</div>
-        <div class="food-item-macros" data-cal="${f.cal}" data-pro="${f.pro}" data-fib="${f.fib}" data-cat="${f.cat}">
+        <div class="food-item-macros" data-name="${f.name}">
           ${f.cal} cal · ${f.pro}g protein · ${f.fib}g fiber · <em>${f.cat}</em>
         </div>
       </div>
@@ -696,8 +719,16 @@ function renderFoodList(query) {
       const qty=Math.max(0.1,parseFloat(inp.value)||1);
       const plan=getWeekPlan();
       plan[addingTo.day][addingTo.meal].push({...food,qty:+qty.toFixed(2)});
-      saveWeekPlan(plan); renderPlanner();
-      document.getElementById('modalOverlay').classList.add('hidden');
+      saveWeekPlan(plan);
+      // Show confirmation, keep modal open
+      const msg=document.getElementById('modalAddedMsg');
+      msg.textContent=`✓ Added to ${addingTo.day}`;
+      msg.classList.remove('hidden');
+      setTimeout(()=>msg.classList.add('hidden'),1500);
+      // Reset serving to 1
+      inp.value='1';
+      const macros=inp.closest('.food-add-group').previousElementSibling.querySelector('.food-item-macros');
+      if(macros) macros.innerHTML=`${food.cal} cal · ${food.pro}g protein · ${food.fib}g fiber · <em>${food.cat}</em>`;
     });
   });
 }
