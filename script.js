@@ -110,7 +110,7 @@ const FOODS = [
   { name:"Pomegranate (1/2 cup)",          cal:72,  pro:1,  fib:4,  cat:"Fruits" },
   { name:"Papaya (1 cup)",                 cal:55,  pro:1,  fib:3,  cat:"Fruits" },
   { name:"Grapes (1 cup)",                 cal:104, pro:1,  fib:1,  cat:"Fruits" },
-  { name:"Kiwi (1 medium)",               cal:61,  pro:1,  fib:3,  cat:"Fruits" },
+  { name:"Kiwi (1 medium)",                cal:61,  pro:1,  fib:3,  cat:"Fruits" },
   { name:"Pineapple (1 cup)",              cal:82,  pro:1,  fib:2,  cat:"Fruits" },
   { name:"Strawberry (1 cup)",             cal:49,  pro:1,  fib:3,  cat:"Fruits" },
   { name:"Pear (1 medium)",                cal:101, pro:1,  fib:5,  cat:"Fruits" },
@@ -165,6 +165,21 @@ const FOODS = [
   { name:"Chaat (1 cup)",                  cal:200, pro:6,  fib:3,  cat:"Snacks" },
   { name:"Protein Shake (1 scoop)",        cal:120, pro:25, fib:1,  cat:"Snacks" },
 
+  // ── CHUTNEYS & CONDIMENTS ──
+  { name:"Coconut Chutney (2 tbsp)",       cal:60,  pro:1,  fib:1,  cat:"Chutneys" },
+  { name:"Green / Mint Chutney (2 tbsp)",  cal:20,  pro:1,  fib:1,  cat:"Chutneys" },
+  { name:"Coriander Chutney (2 tbsp)",     cal:15,  pro:0,  fib:1,  cat:"Chutneys" },
+  { name:"Tamarind Chutney (2 tbsp)",      cal:40,  pro:0,  fib:1,  cat:"Chutneys" },
+  { name:"Tomato Chutney (2 tbsp)",        cal:25,  pro:1,  fib:1,  cat:"Chutneys" },
+  { name:"Peanut Chutney (2 tbsp)",        cal:80,  pro:3,  fib:1,  cat:"Chutneys" },
+  { name:"Onion Chutney (2 tbsp)",         cal:35,  pro:1,  fib:1,  cat:"Chutneys" },
+  { name:"Garlic Chutney (2 tbsp)",        cal:30,  pro:1,  fib:1,  cat:"Chutneys" },
+  { name:"Red Chilli Chutney (2 tbsp)",    cal:20,  pro:1,  fib:1,  cat:"Chutneys" },
+  { name:"Schezwan Chutney (2 tbsp)",      cal:45,  pro:1,  fib:1,  cat:"Chutneys" },
+  { name:"Mango Pickle / Aam Achar (1 tsp)",cal:20, pro:0,  fib:0,  cat:"Chutneys" },
+  { name:"Mixed Pickle (1 tsp)",           cal:15,  pro:0,  fib:0,  cat:"Chutneys" },
+  { name:"Tomato Ketchup (1 tbsp)",        cal:18,  pro:0,  fib:0,  cat:"Chutneys" },
+
   // ── BEVERAGES ──
   { name:"Green Tea (1 cup)",              cal:2,   pro:0,  fib:0,  cat:"Beverages" },
   { name:"Black Coffee (1 cup)",           cal:5,   pro:0,  fib:0,  cat:"Beverages" },
@@ -184,9 +199,9 @@ const MEALS = ["Breakfast","Morning Snack","Lunch","Evening Snack","Dinner"];
 const EMOJI = { "Breakfast":"🌅","Morning Snack":"🍎","Lunch":"☀️","Evening Snack":"🫖","Dinner":"🌙" };
 
 const MEAL_SPLIT = {
-  loss:     { "Breakfast":0.25,"Morning Snack":0.10,"Lunch":0.30,"Evening Snack":0.10,"Dinner":0.25 },
-  maintain: { "Breakfast":0.25,"Morning Snack":0.10,"Lunch":0.30,"Evening Snack":0.10,"Dinner":0.25 },
-  gain:     { "Breakfast":0.20,"Morning Snack":0.15,"Lunch":0.30,"Evening Snack":0.15,"Dinner":0.20 },
+  loss:     {"Breakfast":0.25,"Morning Snack":0.10,"Lunch":0.30,"Evening Snack":0.10,"Dinner":0.25},
+  maintain: {"Breakfast":0.25,"Morning Snack":0.10,"Lunch":0.30,"Evening Snack":0.10,"Dinner":0.25},
+  gain:     {"Breakfast":0.20,"Morning Snack":0.15,"Lunch":0.30,"Evening Snack":0.15,"Dinner":0.20},
 };
 
 const TEMPLATES = {
@@ -226,8 +241,8 @@ let addingTo = null;
 
 // ── UTILS ──────────────────────────────────────────────
 function getMonday(d) {
-  const date = new Date(d); const day = date.getDay();
-  date.setDate(date.getDate() - day + (day===0?-6:1));
+  const date=new Date(d); const day=date.getDay();
+  date.setDate(date.getDate()-day+(day===0?-6:1));
   date.setHours(0,0,0,0); return date;
 }
 function weekKey(d)  { return d.toISOString().split('T')[0]; }
@@ -240,9 +255,9 @@ function emptyWeek() {
   DAYS.forEach(d=>{ w[d]={}; MEALS.forEach(m=>w[d][m]=[]); });
   return w;
 }
-function getWeekPlan()       { return load('wmp_week_'+weekKey(currentWeekStart), emptyWeek()); }
-function saveWeekPlan(plan)  { save('wmp_week_'+weekKey(currentWeekStart), plan); }
-function getProfile()        { return load('wmp_profile',{name:'',weight:65,height:165,age:25,gender:'female',goal:'maintain'}); }
+function getWeekPlan()      { return load('wmp_week_'+weekKey(currentWeekStart),emptyWeek()); }
+function saveWeekPlan(plan) { save('wmp_week_'+weekKey(currentWeekStart),plan); }
+function getProfile()       { return load('wmp_profile',{name:'',weight:65,height:165,age:25,gender:'female',goal:'maintain'}); }
 
 function calcTargets(p) {
   const bmr = p.gender==='male'
@@ -250,18 +265,17 @@ function calcTargets(p) {
     : 10*p.weight+6.25*p.height-5*p.age-161;
   const tdee = bmr*1.4;
   const cal  = p.goal==='loss'?tdee-400:p.goal==='gain'?tdee+300:tdee;
-  const proteinMultiplier = p.goal==='gain'?1.8:1.2;
+  const proteinMult = p.goal==='gain'?1.8:1.2;
   return {
     calories: Math.round(cal),
-    protein:  Math.round(p.weight*proteinMultiplier),
-    fiber:    p.gender==='male'?38:25
+    protein:  Math.round(p.weight*proteinMult),
+    fiber:    p.gender==='male'?38:25,
   };
 }
 
 function iCal(i){ return Math.round(i.cal*(i.qty||1)); }
 function iPro(i){ return Math.round(i.pro*(i.qty||1)); }
 function iFib(i){ return Math.round(i.fib*(i.qty||1)); }
-
 function mealTotals(items) {
   return items.reduce((a,i)=>({cal:a.cal+iCal(i),pro:a.pro+iPro(i),fib:a.fib+iFib(i)}),{cal:0,pro:0,fib:0});
 }
@@ -292,39 +306,39 @@ function renderPlanner() {
   const targets = calcTargets(profile);
   const split   = MEAL_SPLIT[profile.goal]||MEAL_SPLIT.maintain;
   const end     = new Date(currentWeekStart); end.setDate(end.getDate()+6);
-  document.getElementById('weekLabel').textContent = `Week of ${fmt(currentWeekStart)} – ${fmt(end)}`;
+  document.getElementById('weekLabel').textContent=`Week of ${fmt(currentWeekStart)} – ${fmt(end)}`;
 
-  const today = new Date(); today.setHours(0,0,0,0);
-  const grid  = document.getElementById('plannerGrid');
-  grid.innerHTML = '';
+  const today=new Date(); today.setHours(0,0,0,0);
+  const grid=document.getElementById('plannerGrid');
+  grid.innerHTML='';
 
   DAYS.forEach((day,i)=>{
-    const dayDate = new Date(currentWeekStart); dayDate.setDate(dayDate.getDate()+i);
-    const isToday = dayDate.getTime()===today.getTime();
+    const dayDate=new Date(currentWeekStart); dayDate.setDate(dayDate.getDate()+i);
+    const isToday=dayDate.getTime()===today.getTime();
 
-    const col = document.createElement('div');
-    col.className = 'day-column';
+    const col=document.createElement('div');
+    col.className='day-column';
 
-    const hdr = document.createElement('div');
-    hdr.className = 'day-header'+(isToday?' today':'');
-    hdr.textContent = day.slice(0,3);
+    const hdr=document.createElement('div');
+    hdr.className='day-header'+(isToday?' today':'');
+    hdr.textContent=day.slice(0,3);
     col.appendChild(hdr);
 
     MEALS.forEach(meal=>{
-      const items      = plan[day][meal]||[];
-      const mealTarget = Math.round(targets.calories*split[meal]);
-      const actual     = mealTotals(items).cal;
+      const items=plan[day][meal]||[];
+      const mealTarget=Math.round(targets.calories*split[meal]);
+      const actual=mealTotals(items).cal;
 
-      const slot = document.createElement('div');
-      slot.className = 'meal-slot';
-      slot.innerHTML = `<div class="meal-slot-label">${EMOJI[meal]} ${meal}</div>`;
+      const slot=document.createElement('div');
+      slot.className='meal-slot';
+      slot.innerHTML=`<div class="meal-slot-label">${EMOJI[meal]} ${meal}</div>`;
 
       items.forEach((item,idx)=>{
-        const row = document.createElement('div');
-        row.className = 'meal-item';
-        const qtyDisplay = item.qty===1||!item.qty ? '' : ` ×${item.qty}`;
-        row.innerHTML = `
-          <span class="meal-item-name" title="${item.name}">${item.name.split('(')[0].trim()}${qtyDisplay}</span>
+        const row=document.createElement('div');
+        row.className='meal-item';
+        const qtyLabel=(!item.qty||item.qty===1)?'':` ×${item.qty}`;
+        row.innerHTML=`
+          <span class="meal-item-name" title="${item.name}">${item.name.split('(')[0].trim()}${qtyLabel}</span>
           <div class="qty-controls">
             <button class="qty-btn" data-day="${day}" data-meal="${meal}" data-idx="${idx}" data-action="dec">−</button>
             <input class="qty-input" type="number" data-day="${day}" data-meal="${meal}" data-idx="${idx}" value="${item.qty||1}" min="0.1" step="0.1">
@@ -334,22 +348,22 @@ function renderPlanner() {
         slot.appendChild(row);
       });
 
-      const hint = document.createElement('div');
-      hint.className = 'meal-cal-hint';
+      const hint=document.createElement('div');
+      hint.className='meal-cal-hint';
       if(actual>0){
-        const color = actual>mealTarget*1.1?'var(--red)':actual<mealTarget*0.75?'var(--yellow)':'var(--green-dark)';
-        hint.innerHTML = `<span style="color:${color};font-weight:600">${actual}</span><span style="color:var(--muted)"> / ${mealTarget} cal</span>`;
+        const color=actual>mealTarget*1.1?'var(--red)':actual<mealTarget*0.75?'var(--yellow)':'var(--green-dark)';
+        hint.innerHTML=`<span style="color:${color};font-weight:600">${actual}</span><span style="color:var(--muted)"> / ${mealTarget} cal</span>`;
       } else {
-        hint.innerHTML = `<span style="color:var(--muted)">target: ${mealTarget} cal</span>`;
+        hint.innerHTML=`<span style="color:var(--muted)">target: ${mealTarget} cal</span>`;
       }
       slot.appendChild(hint);
 
-      const addBtn = document.createElement('button');
-      addBtn.className = 'add-food-btn';
-      addBtn.textContent = '+ Add food';
-      addBtn.dataset.day  = day;
-      addBtn.dataset.meal = meal;
-      addBtn.addEventListener('click', openModal);
+      const addBtn=document.createElement('button');
+      addBtn.className='add-food-btn';
+      addBtn.textContent='+ Add food';
+      addBtn.dataset.day=day;
+      addBtn.dataset.meal=meal;
+      addBtn.addEventListener('click',openModal);
       slot.appendChild(addBtn);
       col.appendChild(slot);
     });
@@ -357,31 +371,28 @@ function renderPlanner() {
     grid.appendChild(col);
   });
 
-  // qty +/- buttons
   grid.querySelectorAll('.qty-btn').forEach(btn=>{
     btn.addEventListener('click',()=>{
-      const p    = getWeekPlan();
-      const item = p[btn.dataset.day][btn.dataset.meal][+btn.dataset.idx];
-      const cur  = item.qty||1;
-      item.qty   = btn.dataset.action==='inc' ? +(cur+0.5).toFixed(2) : Math.max(0.1,+(cur-0.5).toFixed(2));
+      const p=getWeekPlan();
+      const item=p[btn.dataset.day][btn.dataset.meal][+btn.dataset.idx];
+      const cur=item.qty||1;
+      item.qty=btn.dataset.action==='inc'?+(cur+0.5).toFixed(2):Math.max(0.1,+(cur-0.5).toFixed(2));
       saveWeekPlan(p); renderPlanner();
     });
   });
 
-  // qty direct input
   grid.querySelectorAll('.qty-input').forEach(inp=>{
     inp.addEventListener('change',()=>{
-      const val = Math.max(0.1, parseFloat(inp.value)||1);
-      const p   = getWeekPlan();
-      p[inp.dataset.day][inp.dataset.meal][+inp.dataset.idx].qty = +val.toFixed(2);
+      const val=Math.max(0.1,parseFloat(inp.value)||1);
+      const p=getWeekPlan();
+      p[inp.dataset.day][inp.dataset.meal][+inp.dataset.idx].qty=+val.toFixed(2);
       saveWeekPlan(p); renderPlanner();
     });
   });
 
-  // remove
   grid.querySelectorAll('.meal-item-remove').forEach(btn=>{
     btn.addEventListener('click',()=>{
-      const p = getWeekPlan();
+      const p=getWeekPlan();
       p[btn.dataset.day][btn.dataset.meal].splice(+btn.dataset.idx,1);
       saveWeekPlan(p); renderPlanner();
     });
@@ -393,9 +404,9 @@ document.getElementById('nextWeek').addEventListener('click',()=>{ currentWeekSt
 
 // ── FOOD MODAL ─────────────────────────────────────────
 function openModal(e) {
-  addingTo = { day:e.target.dataset.day, meal:e.target.dataset.meal };
-  document.getElementById('modalTitle').textContent = `Add to ${addingTo.day} — ${addingTo.meal}`;
-  document.getElementById('foodSearch').value = '';
+  addingTo={day:e.target.dataset.day,meal:e.target.dataset.meal};
+  document.getElementById('modalTitle').textContent=`Add to ${addingTo.day} — ${addingTo.meal}`;
+  document.getElementById('foodSearch').value='';
   renderFoodList('');
   document.getElementById('modalOverlay').classList.remove('hidden');
   setTimeout(()=>document.getElementById('foodSearch').focus(),100);
@@ -405,15 +416,12 @@ document.getElementById('modalOverlay').addEventListener('click',e=>{ if(e.targe
 document.getElementById('foodSearch').addEventListener('input',e=>renderFoodList(e.target.value));
 
 function renderFoodList(query) {
-  const filtered = query.trim()
-    ? FOODS.filter(f=>f.name.toLowerCase().includes(query.toLowerCase()))
-    : FOODS;
-
-  document.getElementById('foodList').innerHTML = filtered.map(f=>`
+  const filtered=query.trim()?FOODS.filter(f=>f.name.toLowerCase().includes(query.toLowerCase())):FOODS;
+  document.getElementById('foodList').innerHTML=filtered.map(f=>`
     <div class="food-item">
       <div class="food-item-info">
         <div class="food-item-name">${f.name}</div>
-        <div class="food-item-macros" data-base-cal="${f.cal}" data-base-pro="${f.pro}" data-base-fib="${f.fib}">
+        <div class="food-item-macros" data-cal="${f.cal}" data-pro="${f.pro}" data-fib="${f.fib}" data-cat="${f.cat}">
           ${f.cal} cal · ${f.pro}g protein · ${f.fib}g fiber · <em>${f.cat}</em>
         </div>
       </div>
@@ -426,25 +434,24 @@ function renderFoodList(query) {
       </div>
     </div>`).join('');
 
-  // Live macro preview as serving changes
   document.querySelectorAll('.serving-input').forEach(inp=>{
     inp.addEventListener('input',()=>{
-      const qty  = parseFloat(inp.value)||1;
-      const food = FOODS.find(f=>f.name===inp.dataset.name);
+      const qty=parseFloat(inp.value)||1;
+      const food=FOODS.find(f=>f.name===inp.dataset.name);
       if(!food) return;
-      const macros = inp.closest('.food-item').querySelector('.food-item-macros');
-      macros.innerHTML = `${Math.round(food.cal*qty)} cal · ${Math.round(food.pro*qty)}g protein · ${Math.round(food.fib*qty)}g fiber · <em>${food.cat}</em>`;
+      const macros=inp.closest('.food-item').querySelector('.food-item-macros');
+      macros.innerHTML=`${Math.round(food.cal*qty)} cal · ${Math.round(food.pro*qty)}g protein · ${Math.round(food.fib*qty)}g fiber · <em>${food.cat}</em>`;
     });
   });
 
   document.querySelectorAll('.food-item-add').forEach(btn=>{
     btn.addEventListener('click',()=>{
-      const food = FOODS.find(f=>f.name===btn.dataset.name);
+      const food=FOODS.find(f=>f.name===btn.dataset.name);
       if(!food||!addingTo) return;
-      const inp  = btn.closest('.food-add-group').querySelector('.serving-input');
-      const qty  = Math.max(0.1, parseFloat(inp.value)||1);
-      const plan = getWeekPlan();
-      plan[addingTo.day][addingTo.meal].push({...food, qty:+qty.toFixed(2)});
+      const inp=btn.closest('.food-add-group').querySelector('.serving-input');
+      const qty=Math.max(0.1,parseFloat(inp.value)||1);
+      const plan=getWeekPlan();
+      plan[addingTo.day][addingTo.meal].push({...food,qty:+qty.toFixed(2)});
       saveWeekPlan(plan); renderPlanner();
       document.getElementById('modalOverlay').classList.add('hidden');
     });
@@ -457,8 +464,8 @@ document.getElementById('closeWeekPlan').addEventListener('click',()=>document.g
 document.getElementById('weekPlanOverlay').addEventListener('click',e=>{ if(e.target.id==='weekPlanOverlay') document.getElementById('weekPlanOverlay').classList.add('hidden'); });
 
 function renderWeekModal() {
-  document.getElementById('templateList').innerHTML = Object.entries(TEMPLATES).map(([name,meals])=>{
-    const lines = MEALS.map(m=>`<div style="font-size:11px;color:#6b7280;margin-top:2px">${EMOJI[m]} ${(meals[m]||[]).slice(0,2).map(f=>f.split('(')[0].trim()).join(', ')}</div>`).join('');
+  document.getElementById('templateList').innerHTML=Object.entries(TEMPLATES).map(([name,meals])=>{
+    const lines=MEALS.map(m=>`<div style="font-size:11px;color:#6b7280;margin-top:2px">${EMOJI[m]} ${(meals[m]||[]).slice(0,2).map(f=>f.split('(')[0].trim()).join(', ')}</div>`).join('');
     return `<div class="template-card">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;">
         <div><div style="font-weight:700;font-size:14px;margin-bottom:4px">${name}</div>${lines}</div>
@@ -476,7 +483,7 @@ function renderWeekModal() {
     });
   });
 
-  document.getElementById('copyDayBtns').innerHTML = DAYS.map(d=>
+  document.getElementById('copyDayBtns').innerHTML=DAYS.map(d=>
     `<button class="btn-secondary" style="font-size:12px;padding:5px 12px;" data-day="${d}">${d.slice(0,3)}</button>`
   ).join('');
   document.querySelectorAll('#copyDayBtns button').forEach(btn=>{
@@ -490,46 +497,43 @@ function renderWeekModal() {
 }
 
 function applyTemplate(name) {
-  const tpl  = TEMPLATES[name];
-  const plan = emptyWeek();
+  const tpl=TEMPLATES[name]; const plan=emptyWeek();
   DAYS.forEach(day=>{
     MEALS.forEach(meal=>{
-      plan[day][meal] = (tpl[meal]||[]).map(n=>{ const f=FOODS.find(x=>x.name===n); return f?{...f,qty:1}:null; }).filter(Boolean);
+      plan[day][meal]=(tpl[meal]||[]).map(n=>{ const f=FOODS.find(x=>x.name===n); return f?{...f,qty:1}:null; }).filter(Boolean);
     });
   });
   saveWeekPlan(plan);
 }
 
 function copyDayToAll(src) {
-  const plan = getWeekPlan();
+  const plan=getWeekPlan();
   DAYS.forEach(day=>{ if(day!==src) plan[day]=JSON.parse(JSON.stringify(plan[src])); });
   saveWeekPlan(plan);
 }
 
 // ── NUTRITION ──────────────────────────────────────────
-let selectedDay = 'Monday';
+let selectedDay='Monday';
 
 function renderNutrition() {
-  const plan    = getWeekPlan();
-  const profile = getProfile();
-  const targets = calcTargets(profile);
-  const split   = MEAL_SPLIT[profile.goal]||MEAL_SPLIT.maintain;
+  const plan=getWeekPlan(); const profile=getProfile();
+  const targets=calcTargets(profile);
+  const split=MEAL_SPLIT[profile.goal]||MEAL_SPLIT.maintain;
 
-  document.getElementById('daySelector').innerHTML =
+  document.getElementById('daySelector').innerHTML=
     DAYS.map(d=>`<button class="day-btn ${d===selectedDay?'active':''}" data-day="${d}">${d.slice(0,3)}</button>`).join('');
   document.querySelectorAll('.day-btn').forEach(btn=>{
     btn.addEventListener('click',()=>{ selectedDay=btn.dataset.day; renderNutrition(); });
   });
 
-  const dm  = plan[selectedDay];
-  const tot = dayTotals(dm);
+  const dm=plan[selectedDay]; const tot=dayTotals(dm);
 
   function bar(label,current,target,unit='') {
-    const pct    = Math.min((current/target)*100,100);
-    const status = current>target*1.1?'high':current<target*0.8?'low':'ok';
-    const msg    = status==='high'?`⚠️ ${current-target}${unit} over`
-                 : status==='low' ?`↓ ${target-current}${unit} below target`
-                 : '✓ On track';
+    const pct=Math.min((current/target)*100,100);
+    const status=current>target*1.1?'high':current<target*0.8?'low':'ok';
+    const msg=status==='high'?`⚠️ ${current-target}${unit} over`
+              :status==='low'?`↓ ${target-current}${unit} below target`
+              :'✓ On track';
     return `<div class="progress-item">
       <div class="progress-header"><span class="progress-label">${label}</span><span class="progress-value">${current}${unit} / ${target}${unit}</span></div>
       <div class="progress-bar-bg"><div class="progress-bar ${status}" style="width:${pct}%"></div></div>
@@ -537,39 +541,30 @@ function renderNutrition() {
     </div>`;
   }
 
-  const goalLabel = profile.goal==='loss'?'Weight Loss':profile.goal==='gain'?'Weight Gain':'Maintenance';
-  const tips = [];
-  if(tot.cal===0) {
+  const goalLabel=profile.goal==='loss'?'Weight Loss':profile.goal==='gain'?'Weight Gain':'Maintenance';
+  const tips=[];
+  if(tot.cal===0){
     tips.push(`📋 No meals planned — use <strong>Plan Whole Week</strong> to fill all 7 days instantly!`);
   } else {
-    if(tot.pro < targets.protein*0.8)
-      tips.push(`🥩 Protein low (${tot.pro}g / ${targets.protein}g) — add <strong>Greek Yogurt</strong> (+17g), <strong>Eggs</strong> (+6g), or <strong>Chicken Breast</strong> (+31g/100g)`);
-    if(tot.fib < targets.fiber*0.8)
-      tips.push(`🥦 Fiber low (${tot.fib}g / ${targets.fiber}g) — add <strong>Raspberry</strong> (+8g/cup), <strong>Broccoli</strong> (+5g), or <strong>Chia Seeds</strong> (+5g/tbsp)`);
-    if(tot.cal > targets.calories*1.1)
-      tips.push(`🔥 Over by ${tot.cal-targets.calories} cal — reduce portions using the serving input or swap to lighter options`);
-    if(tot.cal < targets.calories*0.8)
-      tips.push(`📉 Under by ${targets.calories-tot.cal} cal — add a snack like <strong>Banana</strong> (+105 cal) or <strong>Peanut Butter</strong> (+190 cal)`);
-    if(profile.goal==='gain'&&tot.pro<targets.protein)
-      tips.push(`💪 For weight gain: try adding <strong>Protein Shake</strong> (+25g protein) or extra <strong>Paneer</strong>`);
+    if(tot.pro<targets.protein*0.8) tips.push(`🥩 Protein low (${tot.pro}g / ${targets.protein}g) — add <strong>Greek Yogurt</strong> (+17g), <strong>Eggs</strong> (+6g each), or <strong>Chicken Breast</strong> (+31g/100g)`);
+    if(tot.fib<targets.fiber*0.8)   tips.push(`🥦 Fiber low (${tot.fib}g / ${targets.fiber}g) — add <strong>Raspberry</strong> (+8g/cup), <strong>Broccoli</strong> (+5g), or <strong>Chia Seeds</strong> (+5g/tbsp)`);
+    if(tot.cal>targets.calories*1.1) tips.push(`🔥 Over by ${tot.cal-targets.calories} cal — reduce portions using the serving input or swap to lighter options`);
+    if(tot.cal<targets.calories*0.8) tips.push(`📉 Under by ${targets.calories-tot.cal} cal — add a snack like <strong>Banana</strong> (+105 cal) or <strong>Peanut Butter</strong> (+190 cal)`);
+    if(profile.goal==='gain'&&tot.pro<targets.protein) tips.push(`💪 For weight gain: try adding <strong>Protein Shake</strong> (+25g) or extra <strong>Paneer</strong>`);
   }
 
-  const breakdown = MEALS.map(meal=>{
-    const items    = dm[meal]||[];
-    const t        = mealTotals(items);
-    const mealCal  = Math.round(targets.calories*split[meal]);
-    const flag     = t.cal===0?'':t.cal>mealCal*1.15?'🔴':t.cal<mealCal*0.75?'🟡':'🟢';
+  const breakdown=MEALS.map(meal=>{
+    const items=dm[meal]||[]; const t=mealTotals(items);
+    const mealCal=Math.round(targets.calories*split[meal]);
+    const flag=t.cal===0?'':t.cal>mealCal*1.15?'🔴':t.cal<mealCal*0.75?'🟡':'🟢';
     return `<div class="summary-row">
       <span class="label">${EMOJI[meal]} ${meal}</span>
-      <span>${t.cal===0
-        ? `<span style="color:var(--muted)">Nothing added</span>`
-        : `${flag} ${t.cal} cal · ${t.pro}g prot · ${t.fib}g fiber`}
-        <span style="font-size:11px;color:var(--muted)"> / ${mealCal} cal target</span>
-      </span>
+      <span>${t.cal===0?`<span style="color:var(--muted)">Nothing added</span>`:`${flag} ${t.cal} cal · ${t.pro}g prot · ${t.fib}g fiber`}
+      <span style="font-size:11px;color:var(--muted)"> / ${mealCal} cal target</span></span>
     </div>`;
   }).join('');
 
-  document.getElementById('nutritionContent').innerHTML = `
+  document.getElementById('nutritionContent').innerHTML=`
     <div class="nutrition-card">
       <h3>📊 ${selectedDay} — <span style="font-size:13px;color:var(--muted);font-weight:500">${goalLabel} · ${targets.calories} cal target</span></h3>
       ${bar('Calories',tot.cal,targets.calories)}
@@ -585,9 +580,9 @@ function renderNutrition() {
 
 // ── GROCERY ────────────────────────────────────────────
 function renderGrocery() {
-  const plan    = getWeekPlan();
-  const checked = load('wmp_checked_'+weekKey(currentWeekStart),{});
-  const items   = {};
+  const plan=getWeekPlan();
+  const checked=load('wmp_checked_'+weekKey(currentWeekStart),{});
+  const items={};
 
   DAYS.forEach(day=>MEALS.forEach(meal=>{
     (plan[day][meal]||[]).forEach(item=>{
@@ -596,8 +591,8 @@ function renderGrocery() {
     });
   }));
 
-  if(!Object.keys(items).length) {
-    document.getElementById('groceryContent').innerHTML =
+  if(!Object.keys(items).length){
+    document.getElementById('groceryContent').innerHTML=
       `<div class="empty-state"><div class="icon">🛒</div><p>No meals planned yet.<br>Add meals in the Planner tab!</p></div>`;
     return;
   }
@@ -605,12 +600,12 @@ function renderGrocery() {
   const byCat={};
   Object.values(items).forEach(i=>{ (byCat[i.cat]=byCat[i.cat]||[]).push(i); });
 
-  document.getElementById('groceryContent').innerHTML =
+  document.getElementById('groceryContent').innerHTML=
     Object.entries(byCat).map(([cat,foods])=>`
       <div class="grocery-category">
         <h3>${cat}</h3>
         ${foods.map(f=>{
-          const q = Number.isInteger(f.totalQty) ? `×${f.totalQty}` : `×${f.totalQty.toFixed(1)}`;
+          const q=Number.isInteger(f.totalQty)?`×${f.totalQty}`:`×${f.totalQty.toFixed(1)}`;
           return `<div class="grocery-item ${checked[f.name]?'checked':''}">
             <input type="checkbox" ${checked[f.name]?'checked':''} data-name="${f.name}">
             <span class="grocery-item-name">${f.name}</span>
@@ -643,12 +638,12 @@ document.getElementById('toggleSuggest').addEventListener('click',()=>{
 });
 
 document.getElementById('ingredientSearch').addEventListener('input',e=>{
-  const q  = e.target.value.trim();
-  const el = document.getElementById('ingredientResults');
+  const q=e.target.value.trim();
+  const el=document.getElementById('ingredientResults');
   if(!q){ el.innerHTML=''; return; }
-  const matches = FOODS.filter(f=>f.name.toLowerCase().includes(q.toLowerCase()));
-  el.innerHTML = matches.length
-    ? matches.map(f=>`
+  const matches=FOODS.filter(f=>f.name.toLowerCase().includes(q.toLowerCase()));
+  el.innerHTML=matches.length
+    ?matches.map(f=>`
         <div class="food-item">
           <div class="food-item-info">
             <div class="food-item-name">${f.name}</div>
@@ -656,16 +651,16 @@ document.getElementById('ingredientSearch').addEventListener('input',e=>{
           </div>
           <button class="food-item-add add-ing-btn" data-name="${f.name}">+ Add to Plan</button>
         </div>`).join('')
-    : `<div style="padding:10px 12px;font-size:13px;color:var(--muted)">No matches found</div>`;
+    :`<div style="padding:10px 12px;font-size:13px;color:var(--muted)">No matches found</div>`;
 
   document.querySelectorAll('.add-ing-btn').forEach(btn=>{
     btn.addEventListener('click',()=>{
-      const food = FOODS.find(f=>f.name===btn.dataset.name);
+      const food=FOODS.find(f=>f.name===btn.dataset.name);
       if(!food) return;
-      const dayNames = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-      const todayName = dayNames[new Date().getDay()];
-      const targetDay = DAYS.includes(todayName)?todayName:'Monday';
-      const plan = getWeekPlan();
+      const dayNames=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+      const todayName=dayNames[new Date().getDay()];
+      const targetDay=DAYS.includes(todayName)?todayName:'Monday';
+      const plan=getWeekPlan();
       plan[targetDay]['Lunch'].push({...food,qty:1});
       saveWeekPlan(plan);
       btn.textContent=`✓ Added to ${targetDay}`;
@@ -678,10 +673,10 @@ document.getElementById('ingredientSearch').addEventListener('input',e=>{
 // ── PROFILE ────────────────────────────────────────────
 function renderProfile() {
   const p=getProfile();
-  document.getElementById('pName').value   = p.name;
-  document.getElementById('pWeight').value = p.weight;
-  document.getElementById('pHeight').value = p.height;
-  document.getElementById('pAge').value    = p.age;
+  document.getElementById('pName').value   =p.name;
+  document.getElementById('pWeight').value =p.weight;
+  document.getElementById('pHeight').value =p.height;
+  document.getElementById('pAge').value    =p.age;
   document.querySelectorAll('[data-group=gender]').forEach(b=>b.classList.toggle('active',b.dataset.value===p.gender));
   document.querySelectorAll('[data-group=goal]').forEach(b=>b.classList.toggle('active',b.dataset.value===p.goal));
   showTargets(p);
@@ -711,9 +706,9 @@ document.getElementById('saveProfile').addEventListener('click',()=>{
 
 function showTargets(p) {
   const t=calcTargets(p);
-  document.getElementById('tCalories').textContent = t.calories;
-  document.getElementById('tProtein').textContent  = t.protein+'g';
-  document.getElementById('tFiber').textContent    = t.fiber+'g';
+  document.getElementById('tCalories').textContent=t.calories;
+  document.getElementById('tProtein').textContent =t.protein+'g';
+  document.getElementById('tFiber').textContent   =t.fiber+'g';
 }
 
 // ── INIT ───────────────────────────────────────────────
