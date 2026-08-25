@@ -660,19 +660,17 @@ function openModal(e) {
 
 function renderModalDayTabs() {
   document.getElementById('modalDayTabs').innerHTML=
-    DAYS.map(d=>`<button class="modal-day-tab ${d===addingTo.day?'active':''}" data-day="${d}">${d.slice(0,3)}</button>`).join('');
+    DAYS.map(d=>`<button id="daytab_${d}" onclick="selectModalDay('${d}')" class="modal-day-tab ${d===addingTo.day?'active':''}">${d.slice(0,3)}</button>`).join('');
 }
 
-// Single persistent event delegation on the tabs container
-document.getElementById('modalDayTabs').addEventListener('click', function(e) {
-  const btn = e.target.closest('.modal-day-tab');
-  if (!btn) return;
-  addingTo.day = btn.dataset.day;
-  document.querySelectorAll('.modal-day-tab').forEach(b =>
-    b.classList.toggle('active', b.dataset.day === addingTo.day)
-  );
+function selectModalDay(day) {
+  addingTo.day = day;
+  DAYS.forEach(d => {
+    const t = document.getElementById('daytab_' + d);
+    if(t) t.className = 'modal-day-tab' + (d===day?' active':'');
+  });
   document.getElementById('modalAddedMsg').classList.add('hidden');
-});
+}
 
 document.getElementById('closeModal').addEventListener('click',()=>{
   document.getElementById('modalOverlay').classList.add('hidden');
