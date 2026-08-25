@@ -1,4 +1,3 @@
-// Modal day tab fix
 document.addEventListener('click', function(e) {
   var tab = e.target.closest ? e.target.closest('.modal-day-tab') : null;
   if (!tab) return;
