@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weekly Meal Prep</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="app">
+
+  <header class="header">
+    <div class="header-inner">
+      <h1>🥗 Weekly Meal Prep</h1>
+      <nav class="tabs">
+        <button class="tab active" data-tab="planner">📅 Planner</button>
+        <button class="tab" data-tab="nutrition">📊 Nutrition</button>
+        <button class="tab" data-tab="grocery">🛒 Grocery</button>
+        <button class="tab" data-tab="profile">👤 Profile</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="main">
+
+    <!-- PLANNER -->
+    <section id="planner" class="section active">
+      <div class="section-header">
+        <button class="btn-nav" id="prevWeek">←</button>
+        <h2 id="weekLabel"></h2>
+        <button class="btn-nav" id="nextWeek">→</button>
+      </div>
+      <div class="planner-grid" id="plannerGrid"></div>
+    </section>
+
+    <!-- NUTRITION -->
+    <section id="nutrition" class="section hidden">
+      <div class="day-selector" id="daySelector"></div>
+      <div id="nutritionContent"></div>
+    </section>
+
+    <!-- GROCERY -->
+    <section id="grocery" class="section hidden">
+      <div class="section-header">
+        <h2>Grocery List</h2>
+        <button class="btn-secondary" id="clearChecked">Clear Checked</button>
+      </div>
+      <div id="groceryContent"></div>
+    </section>
+
+    <!-- PROFILE -->
+    <section id="profile" class="section hidden">
+      <div class="profile-form">
+        <h2>My Profile</h2>
+        <div class="form-group">
+          <label>Name</label>
+          <input type="text" id="pName" placeholder="Your name">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Weight (kg)</label>
+            <input type="number" id="pWeight" value="65">
+          </div>
+          <div class="form-group">
+            <label>Height (cm)</label>
+            <input type="number" id="pHeight" value="165">
+          </div>
+          <div class="form-group">
+            <label>Age</label>
+            <input type="number" id="pAge" value="25">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Gender</label>
+          <div class="toggle-group">
+            <button class="toggle active" data-group="gender" data-value="female">Female</button>
+            <button class="toggle" data-group="gender" data-value="male">Male</button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Goal</label>
+          <div class="toggle-group">
+            <button class="toggle active" data-group="goal" data-value="maintain">Maintain</button>
+            <button class="toggle" data-group="goal" data-value="loss">Weight Loss</button>
+            <button class="toggle" data-group="goal" data-value="gain">Weight Gain</button>
+          </div>
+        </div>
+        <button id="saveProfile" class="btn-primary">Save Profile</button>
+        <div class="targets-card">
+          <h3>Your Daily Targets</h3>
+          <div class="targets-grid">
+            <div class="target-item">
+              <span class="target-value" id="tCalories">--</span>
+              <span class="target-label">Calories</span>
+            </div>
+            <div class="target-item">
+              <span class="target-value" id="tProtein">--</span>
+              <span class="target-label">Protein (g)</span>
+            </div>
+            <div class="target-item">
+              <span class="target-value" id="tFiber">--</span>
+              <span class="target-label">Fiber (g)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- Food Modal -->
+<div class="modal-overlay hidden" id="modalOverlay">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="modalTitle">Add Food</h3>
+      <button id="closeModal">✕</button>
+    </div>
+    <input type="text" id="foodSearch" placeholder="Search food..." class="search-input">
+    <div id="foodList" class="food-list"></div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
