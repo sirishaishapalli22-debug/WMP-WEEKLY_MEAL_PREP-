@@ -28,14 +28,12 @@
         <button class="btn-nav" id="prevWeek">←</button>
         <h2 id="weekLabel"></h2>
         <button class="btn-nav" id="nextWeek">→</button>
-        <button class="btn-plan-week" id="openPlanWeek">📋 Plan Whole Week</button>
       </div>
       <div class="planner-grid" id="plannerGrid"></div>
     </section>
 
     <!-- NUTRITION -->
     <section id="nutrition" class="section hidden">
-      <div class="day-selector" id="daySelector"></div>
       <div id="nutritionContent"></div>
     </section>
 
@@ -127,24 +125,6 @@
     </div>
     <input type="text" id="foodSearch" placeholder="Search food..." class="search-input">
     <div id="foodList" class="food-list"></div>
-  </div>
-</div>
-
-<!-- Week Plan Modal -->
-<div class="modal-overlay hidden" id="weekPlanOverlay">
-  <div class="modal" style="max-width:540px;">
-    <div class="modal-header">
-      <h3>📋 Plan Whole Week</h3>
-      <button id="closeWeekPlan">✕</button>
-    </div>
-    <div style="padding:16px 20px;overflow-y:auto;max-height:70vh;">
-      <p style="font-size:13px;color:#6b7280;margin-bottom:16px;">Apply a template to fill all 7 days instantly. You can edit individual meals after.</p>
-      <div id="templateList"></div>
-      <div style="margin-top:20px;padding-top:16px;border-top:1px solid #e5e7eb;">
-        <p style="font-size:13px;font-weight:700;margin-bottom:10px;">Or copy one day to all other days:</p>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;" id="copyDayBtns"></div>
-      </div>
-    </div>
   </div>
 </div>
 
