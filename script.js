@@ -483,6 +483,18 @@ let currentWeekStart = getMonday(new Date());
 let addingTo = null;
 let selectedNutrDay = null;
 
+//── ACTIVITY TARGET HELPER ─────────────────────────────
+function getDayCalTarget(targets, day) {
+  const p = getProfile();
+  if (!p.enableActivity) return targets.calories;
+  const acts = load('wmp_act_' + weekKey(currentWeekStart), {});
+  const act   = acts[day] || { type: 'normal', steps: 0 };
+  if (act.type === 'workout') return targets.calories + (p.workoutExtra || 300);
+  if (act.type === 'steps')   return targets.calories + Math.round((act.steps || 0) * 0.04);
+  return targets.calories;
+}
+
+
 // ── UTILS ──────────────────────────────────────────────
 function getMonday(d) {
   const date=new Date(d); const day=date.getDay();
@@ -570,7 +582,7 @@ function renderPlanner() {
 
     MEALS.forEach(meal=>{
       const items=plan[day][meal]||[];
-      const mealTarget=Math.round(targets.calories*split[meal]);
+     const mealTarget=Math.round(getDayCalTarget(targets,day)*split[meal]);
       const actual=mealTotals(items).cal;
 
       const slot=document.createElement('div');
