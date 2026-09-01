@@ -338,6 +338,24 @@ const FOODS = [
   { name:"Strawberry (1 cup)",                  cal:49,  pro:1,  fib:3,  cat:"Fruits" },
   { name:"Dates (3 pieces)",                    cal:80,  pro:1,  fib:2,  cat:"Fruits" },
   { name:"Fruit Bowl (1 medium bowl)",          cal:200, pro:3,  fib:7,  cat:"Fruits" },
+  { name:"Apple (100g)",                        cal:52,  pro:0,  fib:2,  cat:"Fruits" },
+  { name:"Banana (100g)",                       cal:89,  pro:1,  fib:3,  cat:"Fruits" },
+  { name:"Orange (100g)",                       cal:47,  pro:1,  fib:2,  cat:"Fruits" },
+  { name:"Papaya (100g)",                       cal:43,  pro:0,  fib:2,  cat:"Fruits" },
+  { name:"Mango (100g)",                        cal:60,  pro:1,  fib:2,  cat:"Fruits" },
+  { name:"Guava (100g)",                        cal:68,  pro:3,  fib:6,  cat:"Fruits" },
+  { name:"Pineapple (100g)",                    cal:50,  pro:1,  fib:1,  cat:"Fruits" },
+  { name:"Watermelon (100g)",                   cal:30,  pro:1,  fib:0,  cat:"Fruits" },
+  { name:"Muskmelon (100g)",                    cal:34,  pro:1,  fib:1,  cat:"Fruits" },
+  { name:"Peach (1 medium)",                    cal:60,  pro:1,  fib:2,  cat:"Fruits" },
+  { name:"Plum (1 medium)",                     cal:46,  pro:1,  fib:1,  cat:"Fruits" },
+  { name:"Pomegranate (100g)",                  cal:83,  pro:2,  fib:4,  cat:"Fruits" },
+  { name:"Grapes (100g)",                       cal:69,  pro:1,  fib:1,  cat:"Fruits" },
+  { name:"Kiwi (100g)",                         cal:61,  pro:1,  fib:3,  cat:"Fruits" },
+  { name:"Pear (100g)",                         cal:57,  pro:0,  fib:3,  cat:"Fruits" },
+  { name:"Strawberries (100g)",                 cal:32,  pro:1,  fib:2,  cat:"Fruits" },
+  { name:"Dragon Fruit (100g)",                 cal:57,  pro:1,  fib:3,  cat:"Fruits" },
+  { name:"Cherries (100g)",                     cal:63,  pro:1,  fib:2,  cat:"Fruits" },
 
   // ── EGGS ──
   { name:"Egg (1 whole)",                       cal:78,  pro:6,  fib:0,  cat:"Eggs" },
@@ -465,6 +483,115 @@ const FOODS = [
   { name:"Shawarma (1)",                        cal:475, pro:25, fib:3,  cat:"Fast Food" },
   { name:"Paneer Wrap (1)",                     cal:475, pro:18, fib:5,  cat:"Fast Food" },
   { name:"Veg Wrap (1)",                        cal:375, pro:10, fib:5,  cat:"Fast Food" },
+
+  // ── BASIC FOODS & INGREDIENTS ──
+  { name:"White Bread (1 slice)",               cal:75,  pro:3,  fib:1,  cat:"Basic Foods" },
+  { name:"Whole Wheat Bread (1 slice)",         cal:70,  pro:3,  fib:2,  cat:"Basic Foods" },
+  { name:"Multigrain Bread (1 slice)",          cal:75,  pro:4,  fib:3,  cat:"Basic Foods" },
+  { name:"Brown Bread (1 slice)",               cal:70,  pro:3,  fib:2,  cat:"Basic Foods" },
+  { name:"White Bread (2 slices)",              cal:150, pro:6,  fib:2,  cat:"Basic Foods" },
+  { name:"Whole Wheat Bread (2 slices)",        cal:140, pro:6,  fib:4,  cat:"Basic Foods" },
+  { name:"Pav Bun (1)",                         cal:130, pro:4,  fib:1,  cat:"Basic Foods" },
+  { name:"Burger Bun (1)",                      cal:150, pro:5,  fib:1,  cat:"Basic Foods" },
+  { name:"Hot Dog Bun (1)",                     cal:140, pro:5,  fib:1,  cat:"Basic Foods" },
+  { name:"Tortilla (1 medium)",                 cal:140, pro:4,  fib:2,  cat:"Basic Foods" },
+  { name:"Corn Tortilla (1)",                   cal:60,  pro:2,  fib:1,  cat:"Basic Foods" },
+  { name:"Mayonnaise (1 tbsp)",                 cal:95,  pro:0,  fib:0,  cat:"Basic Foods" },
+  { name:"Light Mayonnaise (1 tbsp)",           cal:45,  pro:0,  fib:0,  cat:"Basic Foods" },
+  { name:"Eggless Mayonnaise (1 tbsp)",         cal:90,  pro:0,  fib:0,  cat:"Basic Foods" },
+  { name:"Peanut Butter (1 tbsp)",              cal:95,  pro:4,  fib:1,  cat:"Basic Foods" },
+  { name:"Peanut Butter (2 tbsp)",              cal:190, pro:8,  fib:2,  cat:"Basic Foods" },
+  { name:"Almond Butter (1 tbsp)",              cal:98,  pro:3,  fib:2,  cat:"Basic Foods" },
+  { name:"Hummus (2 tbsp)",                     cal:70,  pro:2,  fib:2,  cat:"Basic Foods" },
+  { name:"Cream Cheese (1 tbsp)",               cal:50,  pro:1,  fib:0,  cat:"Basic Foods" },
+  { name:"Cheese Spread (1 tbsp)",              cal:50,  pro:1,  fib:0,  cat:"Basic Foods" },
+  { name:"Jam (1 tbsp)",                        cal:50,  pro:0,  fib:0,  cat:"Basic Foods" },
+  { name:"Honey (1 tbsp)",                      cal:64,  pro:0,  fib:0,  cat:"Basic Foods" },
+  { name:"Maple Syrup (1 tbsp)",                cal:52,  pro:0,  fib:0,  cat:"Basic Foods" },
+  { name:"Tomato Ketchup (1 tbsp)",             cal:20,  pro:0,  fib:0,  cat:"Basic Foods" },
+  { name:"Green Chutney (2 tbsp)",              cal:25,  pro:1,  fib:1,  cat:"Basic Foods" },
+  { name:"Red Chilli Sauce (1 tbsp)",           cal:15,  pro:0,  fib:0,  cat:"Basic Foods" },
+  { name:"Schezwan Sauce (1 tbsp)",             cal:35,  pro:0,  fib:0,  cat:"Basic Foods" },
+  { name:"Soy Sauce (1 tbsp)",                  cal:10,  pro:1,  fib:0,  cat:"Basic Foods" },
+  { name:"Sweet Chilli Sauce (1 tbsp)",         cal:45,  pro:0,  fib:0,  cat:"Basic Foods" },
+  { name:"Mustard Sauce (1 tbsp)",              cal:10,  pro:1,  fib:0,  cat:"Basic Foods" },
+  { name:"Avocado (100g)",                      cal:160, pro:2,  fib:7,  cat:"Basic Foods" },
+  { name:"Avocado (half)",                      cal:120, pro:2,  fib:5,  cat:"Basic Foods" },
+  { name:"Avocado (1 medium)",                  cal:240, pro:3,  fib:10, cat:"Basic Foods" },
+  { name:"Olives (10)",                         cal:40,  pro:0,  fib:1,  cat:"Basic Foods" },
+  { name:"Olive Oil (1 tsp)",                   cal:40,  pro:0,  fib:0,  cat:"Basic Foods" },
+  { name:"Olive Oil (1 tbsp)",                  cal:120, pro:0,  fib:0,  cat:"Basic Foods" },
+  { name:"Cooking Oil (1 tsp)",                 cal:40,  pro:0,  fib:0,  cat:"Basic Foods" },
+  { name:"Cooking Oil (1 tbsp)",                cal:120, pro:0,  fib:0,  cat:"Basic Foods" },
+  { name:"Coconut Oil (1 tsp)",                 cal:40,  pro:0,  fib:0,  cat:"Basic Foods" },
+  { name:"Sesame Oil (1 tsp)",                  cal:40,  pro:0,  fib:0,  cat:"Basic Foods" },
+  { name:"Potato (100g)",                       cal:77,  pro:2,  fib:2,  cat:"Basic Foods" },
+  { name:"Sweet Potato (100g)",                 cal:86,  pro:2,  fib:3,  cat:"Basic Foods" },
+  { name:"Onion (100g)",                        cal:40,  pro:1,  fib:2,  cat:"Basic Foods" },
+  { name:"Tomato (100g)",                       cal:18,  pro:1,  fib:1,  cat:"Basic Foods" },
+  { name:"Carrot (100g)",                       cal:41,  pro:1,  fib:3,  cat:"Basic Foods" },
+  { name:"Cucumber (100g)",                     cal:15,  pro:1,  fib:1,  cat:"Basic Foods" },
+  { name:"Beetroot (100g)",                     cal:43,  pro:2,  fib:3,  cat:"Basic Foods" },
+  { name:"Capsicum (100g)",                     cal:31,  pro:1,  fib:2,  cat:"Basic Foods" },
+  { name:"Spinach (100g)",                      cal:23,  pro:3,  fib:2,  cat:"Basic Foods" },
+  { name:"Broccoli (100g)",                     cal:35,  pro:2,  fib:3,  cat:"Basic Foods" },
+  { name:"Cauliflower (100g)",                  cal:25,  pro:2,  fib:2,  cat:"Basic Foods" },
+  { name:"Cabbage (100g)",                      cal:25,  pro:1,  fib:2,  cat:"Basic Foods" },
+  { name:"Green Beans (100g)",                  cal:31,  pro:2,  fib:3,  cat:"Basic Foods" },
+  { name:"Green Peas (100g)",                   cal:81,  pro:5,  fib:5,  cat:"Basic Foods" },
+  { name:"Corn (100g)",                         cal:86,  pro:3,  fib:3,  cat:"Basic Foods" },
+  { name:"Mushroom (100g)",                     cal:22,  pro:3,  fib:1,  cat:"Basic Foods" },
+  { name:"Lady Finger / Okra (100g)",           cal:33,  pro:2,  fib:3,  cat:"Basic Foods" },
+  { name:"Brinjal / Eggplant (100g)",           cal:25,  pro:1,  fib:3,  cat:"Basic Foods" },
+  { name:"Bottle Gourd / Lauki (100g)",         cal:15,  pro:1,  fib:1,  cat:"Basic Foods" },
+  { name:"Ridge Gourd / Beerakaya (100g)",      cal:20,  pro:1,  fib:1,  cat:"Basic Foods" },
+  { name:"Drumstick (100g)",                    cal:37,  pro:3,  fib:4,  cat:"Basic Foods" },
+  { name:"Green Chilli (100g)",                 cal:40,  pro:2,  fib:2,  cat:"Basic Foods" },
+  { name:"Garlic (10g)",                        cal:15,  pro:1,  fib:1,  cat:"Basic Foods" },
+  { name:"Ginger (10g)",                        cal:8,   pro:0,  fib:0,  cat:"Basic Foods" },
+  { name:"Chicken Breast (50g)",                cal:83,  pro:16, fib:0,  cat:"Basic Foods" },
+  { name:"Chicken Breast (150g)",               cal:248, pro:47, fib:0,  cat:"Basic Foods" },
+  { name:"Egg White (1)",                       cal:17,  pro:4,  fib:0,  cat:"Basic Foods" },
+  { name:"Egg Whites (4)",                      cal:68,  pro:14, fib:0,  cat:"Basic Foods" },
+  { name:"Tuna, canned in water (100g)",        cal:116, pro:26, fib:0,  cat:"Basic Foods" },
+  { name:"Tofu (100g)",                         cal:76,  pro:8,  fib:1,  cat:"Basic Foods" },
+  { name:"Soy Chunks, cooked (100g)",           cal:120, pro:17, fib:5,  cat:"Basic Foods" },
+  { name:"Edamame (100g)",                      cal:121, pro:12, fib:5,  cat:"Basic Foods" },
+  { name:"Chickpeas, cooked (100g)",            cal:164, pro:9,  fib:8,  cat:"Basic Foods" },
+  { name:"Rajma, cooked (100g)",                cal:127, pro:9,  fib:6,  cat:"Basic Foods" },
+  { name:"Black Chana, cooked (100g)",          cal:164, pro:9,  fib:8,  cat:"Basic Foods" },
+  { name:"Green Moong, cooked (100g)",          cal:105, pro:7,  fib:8,  cat:"Basic Foods" },
+  { name:"Lentils, cooked (100g)",              cal:116, pro:9,  fib:8,  cat:"Basic Foods" },
+  { name:"Black Beans, cooked (100g)",          cal:132, pro:9,  fib:9,  cat:"Basic Foods" },
+  { name:"Quinoa, cooked (1 cup)",              cal:222, pro:8,  fib:5,  cat:"Basic Foods" },
+  { name:"Quinoa, cooked (100g)",               cal:120, pro:4,  fib:3,  cat:"Basic Foods" },
+  { name:"Dalia / Broken Wheat, cooked (1 cup)",cal:150, pro:5,  fib:4,  cat:"Basic Foods" },
+  { name:"Vermicelli, cooked (1 cup)",          cal:190, pro:6,  fib:1,  cat:"Basic Foods" },
+  { name:"Cornflakes (30g)",                    cal:110, pro:2,  fib:1,  cat:"Basic Foods" },
+  { name:"Muesli (40g)",                        cal:150, pro:4,  fib:4,  cat:"Basic Foods" },
+  { name:"Granola (40g)",                       cal:180, pro:4,  fib:3,  cat:"Basic Foods" },
+  { name:"Greek Yogurt (100g)",                 cal:60,  pro:10, fib:0,  cat:"Basic Foods" },
+  { name:"Greek Yogurt (200g)",                 cal:120, pro:20, fib:0,  cat:"Basic Foods" },
+  { name:"Low-fat Milk (250ml)",                cal:105, pro:8,  fib:0,  cat:"Basic Foods" },
+  { name:"Skim Milk (250ml)",                   cal:85,  pro:8,  fib:0,  cat:"Basic Foods" },
+  { name:"Mozzarella Cheese (50g)",             cal:140, pro:11, fib:0,  cat:"Basic Foods" },
+  { name:"Cheddar Cheese (50g)",                cal:200, pro:13, fib:0,  cat:"Basic Foods" },
+  { name:"Almonds (10)",                        cal:70,  pro:3,  fib:2,  cat:"Basic Foods" },
+  { name:"Cashews (10)",                        cal:87,  pro:3,  fib:1,  cat:"Basic Foods" },
+  { name:"Walnuts (5 halves)",                  cal:65,  pro:2,  fib:1,  cat:"Basic Foods" },
+  { name:"Flax Seeds (1 tbsp)",                 cal:37,  pro:1,  fib:2,  cat:"Basic Foods" },
+  { name:"Sunflower Seeds (1 tbsp)",            cal:51,  pro:2,  fib:1,  cat:"Basic Foods" },
+  { name:"Sesame Seeds (1 tbsp)",               cal:52,  pro:2,  fib:1,  cat:"Basic Foods" },
+  { name:"Sugar (1 tsp)",                       cal:16,  pro:0,  fib:0,  cat:"Basic Foods" },
+  { name:"Sugar (1 tbsp)",                      cal:48,  pro:0,  fib:0,  cat:"Basic Foods" },
+  { name:"Jaggery (1 tsp)",                     cal:20,  pro:0,  fib:0,  cat:"Basic Foods" },
+  { name:"Jaggery (1 tbsp)",                    cal:58,  pro:0,  fib:0,  cat:"Basic Foods" },
+  { name:"Coconut, fresh (50g)",                cal:177, pro:2,  fib:4,  cat:"Basic Foods" },
+  { name:"Desiccated Coconut (2 tbsp)",         cal:70,  pro:1,  fib:2,  cat:"Basic Foods" },
+  { name:"Coconut Milk (100ml)",                cal:150, pro:2,  fib:1,  cat:"Basic Foods" },
+  { name:"Corn Flour (1 tbsp)",                 cal:31,  pro:1,  fib:0,  cat:"Basic Foods" },
+  { name:"Besan / Gram Flour (50g)",            cal:193, pro:11, fib:5,  cat:"Basic Foods" },
+  { name:"Wheat Flour / Atta (50g)",            cal:170, pro:6,  fib:6,  cat:"Basic Foods" },
 ];
 
 // ── CONSTANTS ──────────────────────────────────────────
@@ -482,18 +609,6 @@ const MEAL_SPLIT = {
 let currentWeekStart = getMonday(new Date());
 let addingTo = null;
 let selectedNutrDay = null;
-
-//── ACTIVITY TARGET HELPER ─────────────────────────────
-function getDayCalTarget(targets, day) {
-  const p = getProfile();
-  if (!p.enableActivity) return targets.calories;
-  const acts = load('wmp_act_' + weekKey(currentWeekStart), {});
-  const act   = acts[day] || { type: 'normal', steps: 0 };
-  if (act.type === 'workout') return targets.calories + (p.workoutExtra || 300);
-  if (act.type === 'steps')   return targets.calories + Math.round((act.steps || 0) * 0.04);
-  return targets.calories;
-}
-
 
 // ── UTILS ──────────────────────────────────────────────
 function getMonday(d) {
@@ -582,7 +697,7 @@ function renderPlanner() {
 
     MEALS.forEach(meal=>{
       const items=plan[day][meal]||[];
-     const mealTarget=Math.round(getDayCalTarget(targets,day)*split[meal]);
+      const mealTarget=Math.round(targets.calories*split[meal]);
       const actual=mealTotals(items).cal;
 
       const slot=document.createElement('div');
@@ -734,12 +849,10 @@ function renderFoodList(query) {
       const plan=getWeekPlan();
       plan[addingTo.day][addingTo.meal].push({...food,qty:+qty.toFixed(2)});
       saveWeekPlan(plan);
-      // Show confirmation, keep modal open
       const msg=document.getElementById('modalAddedMsg');
       msg.textContent=`✓ Added to ${addingTo.day}`;
       msg.classList.remove('hidden');
       setTimeout(()=>msg.classList.add('hidden'),1500);
-      // Reset serving to 1
       inp.value='1';
       const macros=inp.closest('.food-add-group').previousElementSibling.querySelector('.food-item-macros');
       if(macros) macros.innerHTML=`${food.cal} cal · ${food.pro}g protein · ${food.fib}g fiber · <em>${food.cat}</em>`;
@@ -747,7 +860,7 @@ function renderFoodList(query) {
   });
 }
 
-// ── NUTRITION — FULL WEEK VIEW ─────────────────────────
+// ── NUTRITION ──────────────────────────────────────────
 function renderNutrition() {
   const plan    = getWeekPlan();
   const profile = getProfile();
@@ -756,7 +869,6 @@ function renderNutrition() {
   const end     = new Date(currentWeekStart); end.setDate(end.getDate()+6);
   const goalLabel = profile.goal==='loss'?'Weight Loss':profile.goal==='gain'?'Weight Gain':'Maintenance';
 
-  // Week totals
   let wk={cal:0,pro:0,fib:0};
   const dayData=DAYS.map(day=>{ const t=dayTotals(plan[day]); wk.cal+=t.cal; wk.pro+=t.pro; wk.fib+=t.fib; return {day,t}; });
 
@@ -773,7 +885,6 @@ function renderNutrition() {
   function statusIcon(s){ return s==='ok'?'🟢':s==='over'?'🔴':s==='low'?'🟡':'⬜'; }
   function statusColor(s){ return s==='ok'?'var(--green-dark)':s==='over'?'var(--red)':s==='low'?'#92400e':'var(--muted)'; }
 
-  // Week summary bar
   function miniBar(cur, target){
     const pct = Math.min((cur/target)*100,100);
     const s = statusOf(cur,target);
@@ -783,7 +894,6 @@ function renderNutrition() {
     </div>`;
   }
 
-  // Day detail HTML
   function dayDetail(day){
     const dm=plan[day]; const tot=dayTotals(dm);
     function bar(label,current,target,unit=''){
@@ -837,7 +947,6 @@ function renderNutrition() {
     <div class="meals-summary"><h3>Meal Breakdown</h3>${breakdown}</div>`;
   }
 
-  // Build 7-day cards
   const dayCards = dayData.map(({day,t})=>{
     const s=statusOf(t.cal, targets.calories);
     const isSelected = day===selectedNutrDay;
@@ -942,7 +1051,6 @@ document.getElementById('clearChecked').addEventListener('click',()=>{
   save('wmp_checked_'+weekKey(currentWeekStart),{}); renderGrocery();
 });
 
-// Ingredient → Meal suggestion
 let suggestOpen=false;
 document.getElementById('toggleSuggest').addEventListener('click',()=>{
   suggestOpen=!suggestOpen;
