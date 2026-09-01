@@ -1433,7 +1433,7 @@ if (_plannerGrid) {
     const allIngs = new Set();
     days.forEach(day => meals.forEach(meal => {
       (plan[day]?.[meal] || []).forEach(item => {
-        constings = _getIngredients(item.name);
+        const ings = _getIngredients(item.name);
         if (!seen.has(item.name)) { seen.add(item.name); dishes.push({ name: item.name, ings }); }
         ings.forEach(i => allIngs.add(i));
       });
