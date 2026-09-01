@@ -1,4 +1,4 @@
-// ── FEATURE 1: TOAST NOTIFICATION ────────────────────────────────────
+// ── FEATURE1: TOAST NOTIFICATION ────────────────────────────────────
 function showToast(msg) {
   const t = document.getElementById('appToast');
   if (!t) return;
@@ -20,61 +20,61 @@ function showToast(msg) {
 })();
 
 
-// ── FEATURE 2: PHOTO SCAN (OpenAI Vision) ────────────────────────────
+// ── FEATURE 2: CALSNAP — AI Food Scanner (Google Gemini, free) ────────
 (function () {
-  const scanBtn   = document.getElementById('scanPhotoBtn');
-  const fileInp   = document.getElementById('photoInput');
+  const cameraBtn = document.getElementById('scanCameraBtn');
+  const galleryBtn= document.getElementById('scanGalleryBtn');
+  const cameraInp = document.getElementById('photoInputCamera');
+  const galleryInp= document.getElementById('photoInputGallery');
   const resultsEl = document.getElementById('scanResults');
-  if (!scanBtn || !fileInp || !resultsEl) return;
+  if (!cameraBtn || !galleryBtn || !cameraInp || !galleryInp || !resultsEl) return;
 
-  scanBtn.addEventListener('click', () => {
-    const key = localStorage.getItem('wmp_openai_key');
+  function checkKey() {
+    const key = localStorage.getItem('wmp_gemini_key');
     if (!key) {
-      showToast('Set your OpenAI API key in Profile → AI Photo Scan first');
-      return;
+      showToast('Add your free Gemini API key in Profile → CalSnap first');
+      return false;
     }
-    fileInp.click();
-  });
+    return true;
+  }
 
-  fileInp.addEventListener('change', async () => {
-    const file = fileInp.files[0];
+  cameraBtn.addEventListener('click',() => { if (checkKey()) cameraInp.click();});
+  galleryBtn.addEventListener('click', () => { if (checkKey()) galleryInp.click(); });
+
+  async function handleFile(file) {
     if (!file) return;
-    const key = localStorage.getItem('wmp_openai_key');
+    const key = localStorage.getItem('wmp_gemini_key');
     if (!key) return;
 
-    scanBtn.textContent = '⏳ Scanning…';
-    scanBtn.disabled = true;
+    cameraBtn.textContent  = '⏳ Scanning…';
+    galleryBtn.textContent = '⏳ Scanning…';
+    cameraBtn.disabled  = true;
+    galleryBtn.disabled = true;
     resultsEl.classList.add('hidden');
     resultsEl.innerHTML = '';
 
     try {
-      // File → base64 data URL
-      const b64 = await new Promise((res, rej) => {
+      const dataUrl = await new Promise((res, rej) => {
         const r = new FileReader();
         r.onload  = () => res(r.result);
         r.onerror = rej;
         r.readAsDataURL(file);
       });
+      const mimeType = file.type || 'image/jpeg';
+      const b64Data= dataUrl.split(',')[1];
 
-      const resp = await fetch('https://api.openai.com/v1/chat/completions', {
+      const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`;
+
+      const resp = await fetch(endpoint, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + key
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          model: 'gpt-4o',
-          messages: [{
-            role: 'user',
-            content: [
-              { type: 'image_url', image_url: { url: b64 } },
-              {
-                type: 'text',
-                text: 'Identify the food(s) in this image. Return ONLY a JSON array, no other text: [{"name":"food name with portion","cal":number,"pro":number,"fib":number}]. Use Indian food names where applicable. Keep names short and include portion size in name.'
-              }
+          contents: [{
+            parts: [
+              { inline_data: { mime_type: mimeType, data: b64Data } },
+              { text: 'Identify the food(s) in this image. Return ONLY a JSON array, no other text: [{"name":"food name with portion","cal":number,"pro":number,"fib":number}]. Use Indian food names where applicable. Keep names short and include portion size in name.' }
             ]
-          }],
-          max_tokens: 400
+          }]
         })
       });
 
@@ -84,14 +84,13 @@ function showToast(msg) {
       }
 
       const data  = await resp.json();
-      const text  = data.choices[0].message.content;
+      const text= data.candidates?.[0]?.content?.parts?.[0]?.text || '';
       const match = text.match(/\[[\s\S]*?\]/);
       if (!match) throw new Error('Could not identify food in image');
       const foods = JSON.parse(match[0]);
       if (!foods.length) throw new Error('No food detected');
 
-      // Render results
-      resultsEl.innerHTML = '<div class="scan-label">🤖 AI detected:</div>';
+      resultsEl.innerHTML = '<div class="scan-label">🤖 CalSnap detected:</div>';
       foods.forEach(food => {
         const row = document.createElement('div');
         row.className = 'scan-row';
@@ -109,106 +108,87 @@ function showToast(msg) {
           }
           const plan = getWeekPlan();
           plan[addingTo.day][addingTo.meal].push({
-            name: food.name,
-            cal:  food.cal,
-            pro:  food.pro  || 0,
-            fib:  food.fib  || 0,
-            cat:  'Photo Scan',
-            qty:  1
+            name: food.name, cal: food.cal,
+            pro: food.pro || 0, fib: food.fib || 0,
+            cat: 'CalSnap', qty: 1
           });
           saveWeekPlan(plan);
-          showToast(food.name + ' added to ' + addingTo.day);
-          this.textContent = '✓ Added';
+          showToast(food.name + ' added to ' + addingTo.day);this.textContent = '✓ Added';
           this.disabled = true;
           this.style.cssText = 'background:#86efac;color:#166534;border:none;border-radius:6px;padding:5px 12px;font-size:12px;font-weight:600;';
         });
         resultsEl.appendChild(row);
-      });
-      resultsEl.classList.remove('hidden');
+      });resultsEl.classList.remove('hidden');
 
     } catch (err) {
       showToast('Scan failed: ' + err.message);
     } finally {
-      scanBtn.innerHTML = '📷 Scan food photo (AI)';
-      scanBtn.disabled = false;
-      fileInp.value = '';
+      cameraBtn.innerHTML= '📷 Take Photo';
+      galleryBtn.innerHTML = '🖼️ From Gallery';
+      cameraBtn.disabled  = false;
+      galleryBtn.disabled = false;
+      cameraInp.value  = '';
+      galleryInp.value = '';
     }
-  });
+  }
+
+  cameraInp.addEventListener('change',  () => handleFile(cameraInp.files[0]));
+  galleryInp.addEventListener('change', () => handleFile(galleryInp.files[0]));
 })();
 
 
 // ── FEATURE 4: PORTION GUIDE ─────────────────────────────────────────
-
-// Parse a food name to return a human-readable portion description
 function getPortionInfo(name) {
   const m = name.match(/\(([^)]+)\)/);
   if (!m) return null;
   const p = m[1].trim();
   const pl = p.toLowerCase();
-
-  // Cups
   const cupM = pl.match(/^([\d.]+)\s*cups?/);
   if (cupM) {
     const n = parseFloat(cupM[1]) || 1;
     const gLo = Math.round(n * 175), gHi = Math.round(n * 200);
-    const k = n === 0.5 ? '1 small katori' : n === 1 ? '1 medium katori'
-            : n === 1.5 ? '1½ katori' : n === 2 ? '2 katori' : n + ' katori';
+    const k = n === 0.5 ? '1small katori' : n === 1 ? '1 medium katori': n === 1.5 ? '1½ katori' : n === 2 ? '2 katori' : n + ' katori';
     return `${p} ≈ ${gLo}–${gHi}g ≈ ${k}`;
   }
-  // Tablespoon
   const tbM = pl.match(/^(\d+)\s*tbsp/);
   if (tbM) {
     const n = parseInt(tbM[1]);
     return `${p} ≈ ${n * 13}g ≈ ${n === 1 ? '1 chamach' : n + ' chamach'}`;
   }
-  // Teaspoon
   const tsM = pl.match(/^(\d+)\s*tsp/);
   if (tsM) return `${p} ≈ ${parseInt(tsM[1]) * 5}g`;
-
-  // Glass / ml
   if (pl.includes('glass') || pl.includes('ml')) return `${p} ≈ 240ml ≈ 1 standard glass`;
-
-  // Gram weight already specified
   const gM = pl.match(/^(\d+)\s*g\b/);
   if (gM) {
     const g = parseInt(gM[1]);
     const k = g <= 80 ? 'small handful' : g <= 130 ? '1 small katori' : g <= 200 ? '1 medium katori' : '1 large serving';
     return `${p} ≈ ${k}`;
   }
-  // medium / small / large piece
   if (pl.includes('medium')) return `${p} ≈ 120–150g`;
   if (pl.includes('small'))  return `${p} ≈ 70–90g`;
   if (pl.includes('large'))  return `${p} ≈ 180–220g`;
-
-  // Count of pieces (1), (2), (3) etc.
   const cntM = pl.match(/^(\d+)$/);
   if (cntM) return parseInt(cntM[1]) + ' piece' + (parseInt(cntM[1]) > 1 ? 's' : '') + ' per serving';
-
   return null;
 }
 
-// Option B — collapsible 📏 Portion Guide panel inside modal
+// Option B — collapsible 📏Portion Guide panel
 (function () {
   const header = document.querySelector('.modal-header');
   if (!header) return;
-
-  // Add 📏 button to modal header (before the ✕ close button)
   const closeBtn = document.getElementById('closeModal');
   const pgBtn = document.createElement('button');
-  pgBtn.id        = 'portionGuideBtn';
-  pgBtn.title     = 'Portion Reference Guide';
+  pgBtn.id = 'portionGuideBtn';
+  pgBtn.title = 'Portion Reference Guide';
   pgBtn.innerHTML = '📏';
   pgBtn.style.cssText = 'background:none;border:none;font-size:15px;cursor:pointer;padding:0 6px;opacity:.6;transition:opacity .15s;';
   pgBtn.onmouseenter = () => pgBtn.style.opacity = '1';
   pgBtn.onmouseleave = () => pgBtn.style.opacity = '.6';
   header.insertBefore(pgBtn, closeBtn);
-
-  // Build the guide panel and insert after modal-day-tabs
   const dayTabs = document.getElementById('modalDayTabs');
   if (!dayTabs) return;
-
   const panel = document.createElement('div');
-  panel.id        = 'portionGuidePanel';
+  panel.id = 'portionGuidePanel';
   panel.className = 'portion-guide hidden';
   panel.innerHTML = `
     <div class="pg-title">📏 Portion Reference</div>
@@ -230,8 +210,6 @@ function getPortionInfo(name) {
     <div class="pg-note">💡 Wet curries / dal are slightly heavier per cup (~240g). These are general estimates.</div>
   `;
   dayTabs.after(panel);
-
-  // Toggle on 📏 button click
   pgBtn.addEventListener('click', e => {
     e.stopPropagation();
     const hidden = panel.classList.toggle('hidden');
@@ -239,28 +217,24 @@ function getPortionInfo(name) {
   });
 })();
 
-// Option A — per-item portion info line under each food in the food list
+// Option A — per-item portion info line
 (function () {
   const foodList = document.getElementById('foodList');
   if (!foodList) return;
-
   function _addPortionInfo() {
     foodList.querySelectorAll('.food-item').forEach(item => {
-      if (item.querySelector('.portion-info')) return; // already added
+      if (item.querySelector('.portion-info')) return;
       const nameEl   = item.querySelector('.food-item-name');
       const macrosEl = item.querySelector('.food-item-macros');
       if (!nameEl || !macrosEl) return;
-
       const info = getPortionInfo(nameEl.textContent || '');
       if (!info) return;
-
       const el = document.createElement('div');
       el.className   = 'portion-info';
       el.textContent = '📏 ' + info;
       macrosEl.after(el);
     });
   }
-
   let _piTimer;
   new MutationObserver(() => {
     clearTimeout(_piTimer);
@@ -270,81 +244,56 @@ function getPortionInfo(name) {
 
 
 // ── FEATURE 3: ACTIVITY DAY TARGETS ──────────────────────────────────
-
-// Storage helpers (reads weekKey from currentWeekStart in script.js)
 function _wmpActKey() {
   if (typeof currentWeekStart !== 'undefined' && currentWeekStart) {
-    return 'wmp_act_' + currentWeekStart.toISOString().split('T')[0];
+    return'wmp_act_' + currentWeekStart.toISOString().split('T')[0];
   }
   return 'wmp_act_default';
 }
-function _getWeekAct()           { const v = localStorage.getItem(_wmpActKey()); return v ? JSON.parse(v) : {}; }
-function _getDayAct(day)         { return _getWeekAct()[day] || { type: 'normal', steps: 0 }; }
-function _setDayAct(day, act)    { const a = _getWeekAct(); a[day] = act; localStorage.setItem(_wmpActKey(), JSON.stringify(a)); }
+function _getWeekAct(){ const v = localStorage.getItem(_wmpActKey()); return v ? JSON.parse(v) : {}; }
+function _getDayAct(day)      { return _getWeekAct()[day] || { type: 'normal', steps: 0 }; }
+function _setDayAct(day, act) { const a = _getWeekAct(); a[day] = act; localStorage.setItem(_wmpActKey(), JSON.stringify(a)); }
 
-// Add activity widgets to each day-header after plannerGrid re-renders
 const _plannerGrid = document.getElementById('plannerGrid');
 if (_plannerGrid) {
-  const ALL_DAYS = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
-
   function _addActWidgets() {
     const p = JSON.parse(localStorage.getItem('wmp_profile') || '{}');
     if (!p.enableActivity) return;
-
-    // Recalc base calories using same formula as script.js
     const bmr = p.gender === 'male'
       ? 10 * (p.weight || 65) + 6.25 * (p.height || 165) - 5 * (p.age || 25) + 5
       : 10 * (p.weight || 65) + 6.25 * (p.height || 165) - 5 * (p.age || 25) - 161;
-    const tdee    = bmr * 1.4;
+    const tdee= bmr * 1.4;
     const goalAdj = p.goal === 'loss' ? -400 : p.goal === 'gain' ? 300 : 0;
     const baseCal = Math.round(tdee + goalAdj);
-
     _plannerGrid.querySelectorAll('.day-header').forEach(hdr => {
-      if (hdr.querySelector('.act-widget')) return; // already done
-
-      // Get day name from add-food-btn data attribute (most reliable)
+      if (hdr.querySelector('.act-widget')) return;
       const col = hdr.closest('.day-column');
       const day = col?.querySelector('.add-food-btn')?.dataset.day;
       if (!day) return;
-
       const act   = _getDayAct(day);
-      const extra = act.type === 'workout'
-        ? (p.workoutExtra || 300)
-        : act.type === 'steps'
-          ? Math.round((act.steps || 0) * 0.04)
-          : 0;
+      const extra = act.type === 'workout' ? (p.workoutExtra || 300): act.type === 'steps'? Math.round((act.steps || 0) * 0.04) : 0;
       const dayTarget = baseCal + extra;
-
       const widget = document.createElement('div');
       widget.className = 'act-widget';
-
-      // Activity toggle button
       const btn = document.createElement('button');
-      btn.className = 'act-badge ' + act.type;
-      btn.textContent = act.type === 'workout' ? '💪 Workout'
-                      : act.type === 'steps'   ? '🚶 Steps'
-                      : '+ Activity';
-      btn.title = 'Click to change activity type';
+      btn.className   = 'act-badge ' + act.type;
+      btn.textContent = act.type === 'workout' ? '💪 Workout' : act.type === 'steps' ? '🚶 Steps' : '+ Activity';
+      btn.title ='Click to change activity type';
       btn.addEventListener('click', e => {
         e.stopPropagation();
         const cur = _getDayAct(day).type;
         const nxt = cur === 'normal' ? 'workout' : cur === 'workout' ? 'steps' : 'normal';
         _setDayAct(day, { type: nxt, steps: 0 });
-        // Remove widget so it gets rebuilt
         widget.remove();
         setTimeout(_addActWidgets, 10);
       });
       widget.appendChild(btn);
-
-      // Steps input (only when type === 'steps')
       if (act.type === 'steps') {
         const row = document.createElement('div');
         row.className = 'act-steps-row';
         const inp = document.createElement('input');
-        inp.type        = 'number';
-        inp.className   = 'act-steps-inp';
-        inp.placeholder = '0';
-        inp.value       = act.steps || '';
+        inp.type = 'number'; inp.className = 'act-steps-inp';
+        inp.placeholder = '0'; inp.value = act.steps || '';
         inp.addEventListener('change', e => {
           e.stopPropagation();
           _setDayAct(day, { type: 'steps', steps: +inp.value || 0 });
@@ -352,26 +301,19 @@ if (_plannerGrid) {
           setTimeout(_addActWidgets, 10);
         });
         const lbl = document.createElement('span');
-        lbl.className   = 'act-steps-lbl';
-        lbl.textContent = 'steps';
-        row.appendChild(inp);
-        row.appendChild(lbl);
+        lbl.className = 'act-steps-lbl'; lbl.textContent = 'steps';
+        row.appendChild(inp); row.appendChild(lbl);
         widget.appendChild(row);
       }
-
-      // Show adjusted target if different from base
       if (extra > 0) {
         const badge = document.createElement('div');
-        badge.className   = 'act-target-badge';
+        badge.className = 'act-target-badge';
         badge.textContent = '🎯 ' + dayTarget + ' cal';
         widget.appendChild(badge);
       }
-
       hdr.appendChild(widget);
     });
   }
-
-  // Debounced MutationObserver — fires after every renderPlanner call
   let _actTimer;
   new MutationObserver(() => {
     clearTimeout(_actTimer);
@@ -383,32 +325,27 @@ if (_plannerGrid) {
 // ── PROFILE: Save / Load activity + API key ──────────────────────────
 (function () {
   const enableChk = document.getElementById('pEnableActivity');
-  const actOpts   = document.getElementById('activityOptions');
+  const actOpts= document.getElementById('activityOptions');
   const saveBtn   = document.getElementById('saveProfile');
 
-  // Toggle activity options panel
   if (enableChk && actOpts) {
     enableChk.addEventListener('change', () => {
       actOpts.classList.toggle('hidden', !enableChk.checked);
     });
   }
 
-  // Extend the existing saveProfile click to also save activity settings + API key
   if (saveBtn) {
     saveBtn.addEventListener('click', () => {
-      // Small delay so script.js's own click handler saves profile first
       setTimeout(() => {
         const existing = JSON.parse(localStorage.getItem('wmp_profile') || '{}');
-
         if (document.getElementById('pEnableActivity')) {
           existing.enableActivity = document.getElementById('pEnableActivity').checked;
           existing.workoutExtra   = +(document.getElementById('pWorkoutExtra')?.value) || 300;
           localStorage.setItem('wmp_profile', JSON.stringify(existing));
         }
-
         const keyInp = document.getElementById('pOpenAIKey');
         if (keyInp && keyInp.value && keyInp.value !== '••••') {
-          localStorage.setItem('wmp_openai_key', keyInp.value.trim());
+          localStorage.setItem('wmp_gemini_key', keyInp.value.trim());
           keyInp.value       = '••••';
           keyInp.placeholder = '(API key saved)';
         }
@@ -416,23 +353,17 @@ if (_plannerGrid) {
     });
   }
 
-  // Load saved values on page load
   const p = JSON.parse(localStorage.getItem('wmp_profile') || '{}');
-
   if (enableChk) {
     enableChk.checked = p.enableActivity || false;
     if (actOpts) actOpts.classList.toggle('hidden', !p.enableActivity);
-  }
-
-  const extraInp = document.getElementById('pWorkoutExtra');
+  }const extraInp = document.getElementById('pWorkoutExtra');
   if (extraInp) extraInp.value = p.workoutExtra || 300;
-
   const keyInp = document.getElementById('pOpenAIKey');
-  if (keyInp && localStorage.getItem('wmp_openai_key')) {
+  if (keyInp && localStorage.getItem('wmp_gemini_key')) {
     keyInp.placeholder = '(API key saved — paste new key to update)';
   }
 
-  // Re-sync activity fields whenever user switches to Profile tab
   document.querySelectorAll('.tab').forEach(btn => {
     if (btn.dataset.tab === 'profile') {
       btn.addEventListener('click', () => {
@@ -442,10 +373,169 @@ if (_plannerGrid) {
           const ao = document.getElementById('activityOptions');
           const we = document.getElementById('pWorkoutExtra');
           if (ec) { ec.checked = pp.enableActivity || false; }
-          if (ao) { ao.classList.toggle('hidden', !(pp.enableActivity)); }
+          if (ao) { ao.classList.toggle('hidden',!(pp.enableActivity)); }
           if (we) { we.value = pp.workoutExtra || 300; }
         }, 60);
       });
     }
   });
+})();
+
+
+// ── FEATURE 5: UNIT SELECTOR — type any amount of any unit ───────────
+(function () {
+  const foodList = document.getElementById('foodList');
+  if (!foodList) return;
+
+  const UNIT_GROUPS = [
+    {
+      group: 'Serving',
+      units: [
+        { label: 'srv',fixed: 1,step: 0.25, hint: 'servings' },
+      ]
+    },
+    {
+      group: 'Spoons',
+      units: [
+        { label: 'tsp',         grams: 5,    step: 0.5,  hint: 'tsp'     },
+        { label: 'tbsp',        grams: 13,   step: 0.5,  hint: 'tbsp'    },
+      ]
+    },
+    {
+      group: 'Cups',
+      units: [
+        { label: 'cup',         grams: 187,  step: 0.25, hint: 'cups'    },
+      ]
+    },
+    {
+      group: 'Indian',
+      units: [
+        { label: 'katori (sm)', grams: 100,  step: 0.5,  hint: 'katori'  },
+        { label: 'katori (md)', grams: 187,  step: 0.5,  hint: 'katori'  },
+        { label: 'katori (lg)', grams: 280,  step: 0.5,  hint: 'katori'  },
+        { label: 'glass',       grams: 240,  step: 0.5,  hint: 'glasses' },
+        { label: 'bowl',        grams: 300,  step: 0.5,  hint: 'bowls'   },
+        { label: 'plate',       grams: 450,  step: 0.5,  hint: 'plates'  },
+      ]
+    },
+    {
+      group: 'Weight',
+      units: [
+        { label: 'g',           grams: 1,    step: 5,    hint: 'grams'   },
+        { label: 'kg',          grams: 1000, step: 0.1,  hint: 'kg'      },
+      ]
+    },
+    {
+      group: 'Other',
+      units: [
+        { label: 'scoop (30g)', grams: 30,   step: 0.5,  hint: 'scoops'  },
+        { label: 'scoop (50g)', grams: 50,   step: 0.5,  hint: 'scoops'  },
+        { label: 'handful',     grams: 30,   step: 1,    hint: 'handfuls'},
+        { label: 'piece (sm)',  grams: 80,   step: 1,    hint: 'pieces'  },
+        { label: 'piece (md)',  grams: 130,  step: 1,    hint: 'pieces'  },
+        { label: 'piece (lg)',  grams: 200,  step: 1,    hint: 'pieces'  },
+        { label: 'slice',       grams: 30,   step: 1,    hint: 'slices'  },
+      ]
+    }
+  ];
+
+  const ALL_UNITS = UNIT_GROUPS.flatMap(g => g.units);
+
+  function _servingGrams(name) {
+    const m = name.match(/\(([^)]+)\)/);
+    if (!m) return null;
+    const pl = m[1].toLowerCase().trim();
+    const cup = pl.match(/^([\d.]+)\s*cups?/);
+    if (cup) return Math.round(parseFloat(cup[1]) * 187);
+    const g = pl.match(/^(\d+)\s*g\b/);
+    if (g) return parseInt(g[1]);
+    const tb = pl.match(/^(\d+)\s*tbsp/);
+    if (tb) return parseInt(tb[1]) * 13;
+    const ts = pl.match(/^(\d+)\s*tsp/);
+    if (ts) return parseInt(ts[1]) * 5;
+    return null;
+  }
+
+  function _injectUnits() {
+    foodList.querySelectorAll('.food-item').forEach(item => {
+      if (item.dataset.unitReady) return;
+      item.dataset.unitReady = '1';
+      const srvLabel = item.querySelector('.serving-label');
+      const srvInput = item.querySelector('.serving-input');
+      const nameEl   = item.querySelector('.food-item-name');
+      const macrosEl = item.querySelector('.food-item-macros');
+      if (!srvLabel || !srvInput || !nameEl || !macrosEl) return;
+      const foodName = srvInput.dataset.name || nameEl.textContent.trim();
+      const food= typeof FOODS !== 'undefined' ? FOODS.find(f => f.name === foodName) : null;
+      if (!food) return;
+      const sg = _servingGrams(food.name) || 187;
+      item.dataset.sg = sg;
+      const sel = document.createElement('select');
+      sel.className = 'unit-select';
+      UNIT_GROUPS.forEach(grp => {
+        const og = document.createElement('optgroup');
+        og.label = grp.group;
+        grp.units.forEach(u => {
+          const o = document.createElement('option');
+          o.value = u.label;
+          o.textContent = u.label;
+          og.appendChild(o);
+        });
+        sel.appendChild(og);
+      });
+      srvLabel.replaceWith(sel);
+      const getEff = () => {
+        const unit = ALL_UNITS.find(u => u.label === sel.value);
+        if (!unit) return 1;
+        const qty = parseFloat(srvInput.value) || 0;
+        if (unit.fixed !== undefined) return qty * unit.fixed;
+        return (qty * unit.grams) / sg;
+      };
+      const refreshMacros = () => {
+        const eff = getEff();
+        macrosEl.innerHTML =
+          `<strong style="color:var(--green-dark)">${Math.round(food.cal * eff)} cal</strong>` +
+          ` · ${Math.round(food.pro * eff)}g protein · ${Math.round(food.fib * eff)}g fiber ·<em>${food.cat}</em>`;
+      };
+      const applyUnit = () => {
+        const unit = ALL_UNITS.find(u => u.label === sel.value);
+        if (!unit) return;
+        srvInput.step= unit.step || 1;
+        srvInput.placeholder = unit.hint || '';
+        srvInput.title= `Enter number of ${unit.hint || sel.value}`;
+        if (unit.grams === 1 && (srvInput.value === '1' || !srvInput.value)) {
+          srvInput.value = 100;
+        }
+        refreshMacros();
+      };
+      sel.addEventListener('change', applyUnit);
+      srvInput.addEventListener('input', refreshMacros);
+    });
+  }
+
+  foodList.addEventListener('click', e => {
+    const btn = e.target.closest('.food-item-add');
+    if (!btn) return;
+    const item= btn.closest('.food-item');
+    const srvInput = item?.querySelector('.serving-input');
+    const unitSel  = item?.querySelector('.unit-select');
+    if (!srvInput || !unitSel) return;
+    const sg= parseFloat(item.dataset.sg) || 187;
+    const unit = ALL_UNITS.find(u => u.label === unitSel.value);
+    if (!unit) return;
+    const qty = parseFloat(srvInput.value) || 1;
+    const eff = unit.fixed !== undefined ? qty * unit.fixed : (qty * unit.grams) / sg;
+    srvInput.value = +eff.toFixed(3);
+    setTimeout(() => {
+      unitSel.selectedIndex = 0;
+      srvInput.placeholder= '';
+      srvInput.step= 0.1;
+    }, 250);
+  }, true);
+
+  let _uTimer;
+  new MutationObserver(() => {
+    clearTimeout(_uTimer);
+    _uTimer = setTimeout(_injectUnits, 40);
+  }).observe(foodList, { childList: true, subtree: false });
 })();
