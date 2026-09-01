@@ -26,7 +26,7 @@
     <section id="planner" class="section active">
       <div class="section-header">
         <button class="btn-nav" id="prevWeek">←</button>
-        <h2 id="weekLabel"></h2>
+        <h2id="weekLabel"></h2>
         <button class="btn-nav" id="nextWeek">→</button>
       </div>
       <div class="planner-grid" id="plannerGrid"></div>
@@ -93,8 +93,7 @@
             <button class="toggle" data-group="goal" data-value="gain">Weight Gain</button>
           </div>
         </div>
-        <button id="saveProfile" class="btn-primary">Save Profile</button>
-        <div class="targets-card">
+        <button id="saveProfile" class="btn-primary">Save Profile</button><div class="targets-card">
           <h3>Your Daily Targets</h3>
           <div class="targets-grid">
             <div class="target-item">
@@ -124,20 +123,20 @@
           </div>
           <div id="activityOptions" class="hidden" style="margin-top:8px;">
             <div class="form-group" style="margin-bottom:0">
-              <label>Extra calories on 💪 workout days</label>
+              <label>Extra calories on💪 workout days</label>
               <input type="number" id="pWorkoutExtra" value="300" placeholder="e.g. 300">
             </div>
             <p style="font-size:11px;color:#6b7280;margin-top:6px;">🚶 Steps calories are auto-calculated at ~0.04 cal/step</p>
           </div>
         </div>
 
-        <!-- AI Photo Scan -->
+        <!-- CalSnap -->
         <div class="extra-card">
-          <h3>🤖 AI Photo Scan <span class="optional-tag">optional</span></h3>
-          <p style="font-size:12px;color:#6b7280;margin-bottom:10px;">Take a photo of your food → AI identifies it and estimates calories. Get a free API key at <strong>platform.openai.com</strong>.</p>
+          <h3>📷 CalSnap — AI Food Scanner<span class="optional-tag">free</span></h3>
+          <p style="font-size:12px;color:#6b7280;margin-bottom:10px;">Snap or pick a photo of your food → AI identifies it and estimates calories.<br>Free API key (no credit card): <strong>aistudio.google.com</strong> → Sign in → Get API key → Create API key.</p>
           <div class="form-group" style="margin-bottom:0">
-            <label>OpenAI API Key</label>
-            <input type="password" id="pOpenAIKey" placeholder="sk-...  (stored only in your browser)">
+            <label>Google Gemini API Key</label>
+            <input type="password" id="pOpenAIKey" placeholder="AIza...  (stored only in your browser)">
           </div>
         </div>
       </div>
@@ -155,8 +154,12 @@
     <div id="modalDayTabs" class="modal-day-tabs"></div>
     <div id="modalAddedMsg" class="modal-added-msg hidden"></div>
     <input type="text" id="foodSearch" placeholder="Search food..." class="search-input">
-    <input type="file" id="photoInput" accept="image/*" style="display:none">
-    <button class="scan-btn" id="scanPhotoBtn">📷 Scan food photo (AI)</button>
+    <input type="file" id="photoInputCamera"accept="image/*" capture="environment" style="display:none">
+    <input type="file" id="photoInputGallery" accept="image/*" style="display:none">
+    <div class="scan-btns">
+      <button class="scan-btn" id="scanCameraBtn">📷 Take Photo</button>
+      <button class="scan-btn" id="scanGalleryBtn">🖼️ From Gallery</button>
+    </div>
     <div id="scanResults" class="scan-results hidden"></div>
     <div id="foodList" class="food-list"></div>
   </div>
